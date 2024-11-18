@@ -5,6 +5,25 @@
 #define RED     "\x1b[1;31m"
 #define RESET   "\x1b[0m"
 
+int first_time_set(){
+    FILE *fp;
+
+    fp = fopen("savegame.txt", "r");
+    if(fp==NULL){
+        fp = fopen("savegame.txt", "w");
+        fclose(fp);
+    }
+
+    fp = fopen("leaderboard.txt", "r");
+    if(fp==NULL){
+        fp = fopen('leaderboard.txt', "w");
+        fprintf(fp, "LEADERBOARD\n");
+        for(int i = 0; i<10; i++){
+            fprintf(fp, "%d. %d\n", i+1, 0);
+        }
+        fclose(fp);
+    }
+}
 
 int startupscreen(){
     char c;
@@ -58,6 +77,8 @@ void leaderboard(){
 }
 
 int main(){
+    first_time_set();
+
     int choice = startupscreen();
 
     while(1){
