@@ -5,7 +5,7 @@
 #define RED     "\x1b[1;31m"
 #define RESET   "\x1b[0m"
 
-int first_time_set(){
+void first_time_set(){
     FILE *fp;
 
     fp = fopen("savegame.txt", "r");
@@ -76,9 +76,18 @@ void leaderboard(){
     fclose(fp);
 }
 
+void new_game(char name[]){
+    printf("Write your name: ");
+    scanf("%49s", name);
+
+    FILE *fp;
+    fp = fopen("savegame.txt", "w");
+    fprintf(fp, "%s %d", name, 1000);
+}
+
 int main(){
     first_time_set();
-
+    char name[50];
     int choice = startupscreen();
 
     while(1){
@@ -87,10 +96,10 @@ int main(){
             choice = startupscreen();
             continue;
         }
-        else if(choice==2){
-
+        else if(choice==1){
+            new_game(name);
         }
-        else{
+        else if(choice==2){
 
         }
     }
