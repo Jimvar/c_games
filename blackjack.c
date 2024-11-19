@@ -116,6 +116,37 @@ void new_game(char name[], int *money, int *seed, int *seedflag){
     fclose(fp);
 }
 
+void leaderboard_save_delete(int money){
+    FILE *fp;
+    int board[11];
+
+    fp = fopen("leaderboard.txt", "r");
+    for(int i = 0; i<10; i++){
+        fscanf(fp, "%d", &board[i]);
+    }
+    fclose(fp);
+    board[10] = money;
+
+    for (int i = 0; i < 11 - 1; i++) {
+        for (int j = 0; j < 11 - i - 1; j++) {
+            if (board[j] < board[j + 1]) {
+                int temp = board[j];
+                board[j] = board[j + 1];
+                board[j + 1] = temp;
+            }
+        }
+    }
+
+    fp = fopen("leaderboard.txt", "w");
+    for(int i = 0; i<10; i++){
+        fprintf(fp, "%d\n", board[i]);
+    }
+    fclose(fp);
+
+    fp = fopen("savegame.txt", "w");
+    fclose(fp);
+}
+
 void savegame(char name[], int *money, int *seed, int *seedflag){
     FILE *fp;
     fp = fopen("savegame.txt", "w");
@@ -419,7 +450,7 @@ int main(){
         }
         else if(choice==2){
             fp = fopen("savegame.txt", "r");
-            fscanf(fp, "%s %d %d %d %d", name, &money, &seed, &seedflag);
+            fscanf(fp, "%s %d %d %d", name, &money, &seed, &seedflag);
             fclose(fp);
         }
         srand(seed);
@@ -453,11 +484,11 @@ int main(){
 
             again = 0;
             printf("Again?(Write 1): \n");
-            printf("If you want to end the run and save the money, press 1821: \n");
+            printf("If you want to end the run and save the money to the leaderboard, press 1821: \n");
             scanf("%d", &again);
         }
         if(again==1821){
-
+            leaderboard_save_delete(money);
         }
     }
 }
