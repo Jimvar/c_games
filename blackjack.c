@@ -4,9 +4,17 @@
 
 #define GREEN "\x1b[1;32m"
 #define RED     "\x1b[1;31m"
-#define BBLK "\e[1;30m"
-#define BYEL "\e[1;33m"
+#define BBLU "\e[1;34m"
+#define BMAG "\e[1;35m"
 #define RESET   "\x1b[0m"
+
+const char *colors[] = {
+    GREEN,
+    RED,
+    BBLU,
+    BMAG,
+    RESET
+};
 
 void first_time_set(){
     FILE *fp;
@@ -125,23 +133,10 @@ void card_check(int played_cards, int deck[][14]){
 
 void print_deck(int deck[][14]){
     putchar('\n');
+
     for(int k = 0; k<4; k++){
-        char color;
-        if(k==0){
-            color = "\e[1;30m";
-        }
-        else if(k==1){
-            color = RED;
-        }
-        else if(k==2){
-            color = GREEN;
-        }
-        else{
-            color = BYEL;
-        }
-        
         for(int i = 0; i<14; i++){
-            printf(" ---  ");
+            printf("%s ---  ", colors[k]);
         }
         putchar('\n');
         for(int i = 0; i<3; i++){
@@ -162,6 +157,8 @@ void print_deck(int deck[][14]){
         }
         putchar('\n');
     }
+    putchar('\n');
+    printf(RESET);
 }
 
 void draw_cards(int questionflag, int how_many, int current_play[2][30], int k, int *start){
