@@ -130,6 +130,22 @@ void card_check(int played_cards, int deck[][14]){
     }
 }
 
+char symbolmatcher(int symbol){
+    if(symbol == 0) return '1';
+    else if(symbol == 1) return '2';
+    else if(symbol == 2) return '3';
+    else if(symbol == 3) return '4';
+    else if(symbol == 4) return '5';
+    else if(symbol == 5) return '6';
+    else if(symbol == 6) return '7';
+    else if(symbol == 7) return '8';
+    else if(symbol == 8) return '9';
+    else if(symbol == 9) return 'T';
+    else if(symbol == 10) return 'J';
+    else if(symbol == 11) return 'Q';
+    else if(symbol == 12) return 'K';
+    else if(symbol == 13) return 'A';
+}
 
 void print_deck(int deck[][14]){
     putchar('\n');
@@ -143,7 +159,7 @@ void print_deck(int deck[][14]){
             for(int j = 0; j<14; j++){
                 printf("| ");
                 if(i==1){
-                    deck[k][j] ?  putchar('-')  : printf("%c", deck[k][j] + '0' + j);
+                    deck[k][j] ?  putchar('-')  : printf("%c", symbolmatcher(j));
                 }
                 else{
                     putchar(' ');
@@ -161,57 +177,36 @@ void print_deck(int deck[][14]){
     printf(RESET);
 }
 
-void draw_cards(int questionflag, int how_many, int current_play[2][30], int k, int *start){
-    int color;
-    
-    if(questionflag==1){
-        for(int i = 0; i<how_many; i++){
-            //color = choose_color();
-            printf(" ---  ");
-        }
-        putchar('\n');
-        for(int i = 0; i<3; i++){
-            for(int j = 0; j<how_many; j++){
-                printf("| ");
-                if(i==1){
-                    j==1 ? putchar('?') : printf("%c", current_play[1][*start] + '0');
-                    (*start)++;
-                }
-                else{
-                    putchar(' ');
-                }
-                printf(" | ");
-            }
-            putchar('\n');
-        }
-        for(int i = 0; i<how_many; i++){
-            printf(" ---  ");
-        }
-    }
-    else{
-        for(int i = 0; i<how_many; i++){
-            printf(" ---  ");
-        }
-        putchar('\n');
-        for(int i = 0; i<3; i++){
-            for(int j = 0; j<how_many; j++){
-                printf("| ");
-                if(i==1){
-                    printf("%c", current_play[1][*start] + '0');
-                    (*start)++;
-                }
-                else{
-                    putchar(' ');
-                }
-                printf(" | ");
-            }
-            putchar('\n');
-        }
-        for(int i = 0; i<how_many; i++){
-            printf(" ---  ");
-        }
+void draw_cards(int how_many, int current_play[2][30], int k, int start){
+
+    int temp = start;
+
+    for(int i = 0; i<how_many; i++){
+        printf("%s ---  ", colors[current_play[0][temp]]);
+        temp++;
     }
     putchar('\n');
+    for(int i = 0; i<3; i++){
+        temp = start;
+        for(int j = 0; j<how_many; j++){
+            printf("%s| ", colors[current_play[0][temp]]);
+            if(i==1){
+                printf("%c", symbolmatcher(current_play[1][temp]));
+            }
+            else{
+                putchar(' ');
+            }
+            printf(" | ");
+            temp++;
+        }
+        putchar('\n');
+    }
+    temp = start;
+    for(int i = 0; i<how_many; i++){
+        printf("%s ---  ", colors[current_play[0][temp]]);
+        temp++;
+    }
+    printf(RESET "\n");
 }
 
 int game(int deck[][14], int *played_cards){
@@ -257,10 +252,9 @@ int game(int deck[][14], int *played_cards){
     int choice;
     while(player_turn==0){
         printf("Dealer\n"); //1 for question, 0 for normal
-        draw_cards(1, 2, current_play, k, &start);
+        draw_cards(2, current_play, k, 0);
         printf("Player\n");
-        draw_cards(0, 2, current_play, k, &start);
-        start = 0;
+        draw_cards(2, current_play, k, 2);
         if(playersum>21){
             break;
         }
