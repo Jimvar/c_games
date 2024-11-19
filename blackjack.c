@@ -251,7 +251,10 @@ void draw_cards(int how_many, int current_play[2][30], int k, int start){
 
 int sumcheck(int symbol, int sum, int *flag){
     int now = 0;
-    if(symbol==13){
+    if(symbol==13 && *flag==1){
+        return sum + 1;
+    }
+    else if(symbol==13){
         *flag = 1;
         now = 1;
     }
@@ -464,7 +467,7 @@ int main(){
             do{
                 printf("Choose bet(You have %d money): ", money);
                 scanf("%d", &bet);
-            } while(bet>money);
+            } while(bet>money && bet>0);
             money -=bet;
             
             won = game(deck, &played_cards);
@@ -481,6 +484,11 @@ int main(){
                 money += bet;
             }
             savegame(name, &money, &seed, &seedflag);
+
+            if(money==0){
+                printf("You lost completely!\n");
+                leaderboard_save_delete(money);
+            }
 
             again = 0;
             printf("Again?(Write 1): \n");
