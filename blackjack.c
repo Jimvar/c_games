@@ -120,14 +120,17 @@ void new_game(char name[], int *money, int *seed, int *seedflag, int *timer){
     fclose(fp);
 }
 
-void card_check(int played_cards, int deck[][14]){
+int card_check(int played_cards, int deck[][14]){
     if(played_cards==56){
         for(int i = 0 ; i<4; i++){
             for(int j = 0; j<14; j++){
                 deck[i][j] = 0;
             }
         }
+        printf("Resuffled cards!\n\n");
+        return 0;
     }
+    return played_cards;
 }
 
 char symbolmatcher(int symbol){
@@ -269,7 +272,7 @@ int game(int deck[][14], int *played_cards){
             dealersum = sumcheck(rank, dealersum, &softflagdealer);
             (*played_cards)++;
             setup++;
-            card_check(*played_cards, deck);
+            (*played_cards) = card_check(*played_cards, deck);
         }
     } while(setup<=1);
     
@@ -286,21 +289,21 @@ int game(int deck[][14], int *played_cards){
             playersum = sumcheck(rank, playersum, &softflagplayer);
             (*played_cards)++;
             setup++;
-            card_check(*played_cards, deck);
+            *played_cards = card_check(*played_cards, deck);
         }
     } while(setup<=1);
     
     int start = 0;
     int player_turn = 0;
-    int choice;
+    int choice, playerlimit = 2, dealerlimit = 2;
     while(player_turn==0){
-        printf("Dealer\n"); //1 for question, 0 for normal
-        draw_cards(2, current_play, k, 0);
+        printf("Dealer\n"); 
+        draw_cards(dealerlimit, current_play, k, 0);
         printf("Sum: %d\n", dealersum);
         printf("Player\n");
-        draw_cards(2, current_play, k, 2);
+        draw_cards(playerlimit, current_play, k, 2);
         printf("Sum: %d\n", playersum);
-        if(playersum>21){
+        if(playersum>=21 || dealersum>=21){
             break;
         }
         
@@ -310,13 +313,82 @@ int game(int deck[][14], int *played_cards){
         } while(choice<=0 || choice>=4);
         
         if(choice==1){
-            
+            do{ //Player
+                suit = rand()%4;
+                rank = rand()%14;
+                if(deck[suit][rank]==0){
+                    deck[suit][rank]++;
+                    current_play[0][k] = suit;
+                    current_play[1][k] = rank;
+                    k++;
+                    playersum = sumcheck(rank, playersum, &softflagplayer);
+                    (*played_cards)++;
+                    choice++;
+                    playerlimit++;
+                    *played_cards = card_check(*played_cards, deck);
+                }
+            } while(choice<=1);
         }
         else if(choice==2){
             player_turn++;
         }
         else{
             print_deck(deck);
+        }
+    }
+
+    if(playersum>21){
+        return 0;
+    }
+    else{
+        if(dealersum>=17){
+            if(playersum>dealersum){
+                return 1;
+            }
+            else if(playersum==dealersum){
+                return 2;
+            }
+            else{
+                return 0;
+            }
+        }
+        else{
+            do{ //Dealer
+                suit = rand()%4;
+                rank = rand()%14;
+                if(deck[suit][rank]==0){
+                    deck[suit][rank]++;
+                    current_play[0][k] = suit;
+                    current_play[1][k] = rank;
+                    k++;
+                    dealersum = sumcheck(rank, dealersum, &softflagdealer);
+                    (*played_cards)++;
+                    dealerlimit++;
+                    setup++;
+                    *played_cards = card_check(*played_cards, deck);
+                }
+            } while(dealersum<17 && dealersum<=playersum);
+
+            printf("Dealer\n"); 
+            draw_cards(dealerlimit, current_play, k, 0);
+            printf("Sum: %d\n", dealersum);
+            printf("Player\n");
+            draw_cards(playerlimit, current_play, k, 2);
+            printf("Sum: %d\n", playersum);
+
+            if(dealersum>21){
+                return 1;
+            }
+            else if(playersum>dealersum){
+                return 1;
+            }
+            else if(playersum==dealersum){
+                return 2;
+            }
+            else{
+                return 0;
+            }
+
         }
     }
     
