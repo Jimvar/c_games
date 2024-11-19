@@ -86,7 +86,7 @@ void leaderboard(){
     fclose(fp);
 }
 
-void new_game(char name[], int *money, int *seed, int *seedflag, int *timer){
+void new_game(char name[], int *money, int *seed, int *seedflag){
     FILE *fp;
     fp = fopen("savegame.txt", "w");
 
@@ -113,11 +113,17 @@ void new_game(char name[], int *money, int *seed, int *seedflag, int *timer){
         *seedflag = 0;
         fprintf(fp, "%d %d ", *seed, *seedflag);
     }
-    
-    *timer = 0;
-    fprintf(fp, "%d", *timer);
-
     fclose(fp);
+}
+
+void savegame(char name[], int *money, int *seed, int *seedflag){
+    FILE *fp;
+    fp = fopen("savegame.txt", "w");
+
+    fprintf(fp, "%s %d ", name, *money);
+    fprintf(fp, "%d %d ", *seed, *seedflag);
+    fclose(fp);
+
 }
 
 int card_check(int played_cards, int deck[][14]){
@@ -399,7 +405,6 @@ int main(){
     char name[50];
     int money;
     int seed, seedflag;
-    int timer;
     FILE *fp;
     int choice;
 
@@ -410,11 +415,11 @@ int main(){
             continue;
         }
         else if(choice==1){
-            new_game(name, &money, &seed, &seedflag, &timer);
+            new_game(name, &money, &seed, &seedflag);
         }
         else if(choice==2){
             fp = fopen("savegame.txt", "r");
-            fscanf(fp, "%s %d %d %d %d", name, &money, &seed, &seedflag, &timer);
+            fscanf(fp, "%s %d %d %d %d", name, &money, &seed, &seedflag);
             fclose(fp);
         }
         srand(seed);
@@ -444,10 +449,15 @@ int main(){
                 printf("You tied!\n");
                 money += bet;
             }
+            savegame(name, &money, &seed, &seedflag);
+
             again = 0;
-            printf("Again?(Write 1): ");
+            printf("Again?(Write 1): \n");
+            printf("If you want to end the run and save the money, press 1821: \n");
             scanf("%d", &again);
-            
+        }
+        if(again==1821){
+
         }
     }
 }
