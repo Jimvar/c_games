@@ -86,7 +86,7 @@ void leaderboard(){
     fclose(fp);
 }
 
-void new_game(char name[], int *money, int *seed){
+void new_game(char name[], int *money, int *seed, int deck[][14]){
     FILE *fp;
     fp = fopen("savegame.txt", "w");
 
@@ -105,11 +105,18 @@ void new_game(char name[], int *money, int *seed){
         printf("Write your seed: ");
         scanf("%d", &answer);
         *seed = answer;
-        fprintf(fp, "%d", *seed);
+        fprintf(fp, "%d ", *seed);
     }
     else{
         *seed = time(NULL);
-        fprintf(fp, "%d", *seed);
+        fprintf(fp, "%d ", *seed);
+    }
+
+    for(int i = 0; i<4; i++){
+        for(int j = 0; j<14; j++){
+            fprintf(fp, "%d ", 0);
+            deck[i][j] = 0;
+        }
     }
     fclose(fp);
 }
@@ -145,12 +152,18 @@ void leaderboard_save_delete(int money){
     fclose(fp);
 }
 
-void savegame(char name[], int *money, int *seed){
+void savegame(char name[], int *money, int *seed, int deck[][14]){
     FILE *fp;
     fp = fopen("savegame.txt", "w");
 
     fprintf(fp, "%s %d ", name, *money);
-    fprintf(fp, "%d", *seed);
+    fprintf(fp, "%d ", *seed);
+    for(int i = 0; i<4; i++){
+        for(int j = 0; j<14; j++){
+            fprintf(fp, "%d ", deck[i][j]);
+        }
+    }
+
     fclose(fp);
 
 }
@@ -433,6 +446,7 @@ int main(){
     int seed;
     FILE *fp;
     int choice;
+    int deck[4][14];
 
     while(1){
         choice = startupscreen();
@@ -441,15 +455,19 @@ int main(){
             continue;
         }
         else if(choice==1){
-            new_game(name, &money, &seed);
+            new_game(name, &money, &seed, deck);
         }
         else if(choice==2){
             fp = fopen("savegame.txt", "r");
-            fscanf(fp, "%s %d %d %d", name, &money, &seed);
+            fscanf(fp, "%s %d %d", name, &money, &seed);
+            for(int i = 0; i<4; i++){
+                for(int j = 0; j<14; j++){
+                    fscanf(fp, "%d", &deck[i][j]);
+                }
+            }
             fclose(fp);
         }
         srand(seed);
-        int deck[4][14] = {0};
         int played_cards = 0;
         int bet, won;
         
@@ -475,7 +493,7 @@ int main(){
                 printf("You tied!\n");
                 money += bet;
             }
-            savegame(name, &money, &seed);
+            savegame(name, &money, &seed, deck);
 
             if(money==0){
                 printf("You lost completely!\n");
