@@ -86,7 +86,7 @@ void leaderboard(){
     fclose(fp);
 }
 
-void new_game(char name[], int *money, int *seed, int *seedflag){
+void new_game(char name[], int *money, int *seed){
     FILE *fp;
     fp = fopen("savegame.txt", "w");
 
@@ -105,13 +105,11 @@ void new_game(char name[], int *money, int *seed, int *seedflag){
         printf("Write your seed: ");
         scanf("%d", &answer);
         *seed = answer;
-        *seedflag = 1;
-        fprintf(fp, "%d %d ", *seed, *seedflag);
+        fprintf(fp, "%d", *seed);
     }
     else{
         *seed = time(NULL);
-        *seedflag = 0;
-        fprintf(fp, "%d %d ", *seed, *seedflag);
+        fprintf(fp, "%d", *seed);
     }
     fclose(fp);
 }
@@ -147,12 +145,12 @@ void leaderboard_save_delete(int money){
     fclose(fp);
 }
 
-void savegame(char name[], int *money, int *seed, int *seedflag){
+void savegame(char name[], int *money, int *seed){
     FILE *fp;
     fp = fopen("savegame.txt", "w");
 
     fprintf(fp, "%s %d ", name, *money);
-    fprintf(fp, "%d %d ", *seed, *seedflag);
+    fprintf(fp, "%d", *seed);
     fclose(fp);
 
 }
@@ -217,7 +215,7 @@ void print_deck(int deck[][14]){
     printf(RESET);
 }
 
-void draw_cards(int how_many, int hand[][30]){
+void draw_cards(int how_many, int hand[][20]){
     int start = 0;
     int temp = start;
 
@@ -357,7 +355,6 @@ int game(int deck[][14], int *played_cards){
                     deck[suit][rank]++;
                     playerhand[0][playerlimit] = suit;
                     playerhand[1][playerlimit] = rank;
-                    playerlimit++;
                     playersum = sumcheck(rank, playersum, &softflagplayer);
                     (*played_cards)++;
                     choice++;
@@ -397,7 +394,6 @@ int game(int deck[][14], int *played_cards){
                     deck[suit][rank]++;
                     dealerhand[0][dealerlimit] = suit;
                     dealerhand[1][dealerlimit] = rank;
-                    dealerlimit++;
                     dealersum = sumcheck(rank, dealersum, &softflagdealer);
                     (*played_cards)++;
                     dealerlimit++;
@@ -434,7 +430,7 @@ int main(){
     first_time_set();
     char name[50];
     int money;
-    int seed, seedflag;
+    int seed;
     FILE *fp;
     int choice;
 
@@ -445,11 +441,11 @@ int main(){
             continue;
         }
         else if(choice==1){
-            new_game(name, &money, &seed, &seedflag);
+            new_game(name, &money, &seed);
         }
         else if(choice==2){
             fp = fopen("savegame.txt", "r");
-            fscanf(fp, "%s %d %d %d", name, &money, &seed, &seedflag);
+            fscanf(fp, "%s %d %d %d", name, &money, &seed);
             fclose(fp);
         }
         srand(seed);
@@ -479,7 +475,7 @@ int main(){
                 printf("You tied!\n");
                 money += bet;
             }
-            savegame(name, &money, &seed, &seedflag);
+            savegame(name, &money, &seed);
 
             if(money==0){
                 printf("You lost completely!\n");
