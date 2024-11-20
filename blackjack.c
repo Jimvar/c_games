@@ -217,21 +217,21 @@ void print_deck(int deck[][14]){
     printf(RESET);
 }
 
-void draw_cards(int how_many, int current_play[2][30], int k, int start){
-
+void draw_cards(int how_many, int hand[][30]){
+    int start = 0;
     int temp = start;
 
     for(int i = 0; i<how_many; i++){
-        printf("%s ---  ", colors[current_play[0][temp]]);
+        printf("%s ---  ", colors[hand[0][temp]]);
         temp++;
     }
     putchar('\n');
     for(int i = 0; i<3; i++){
         temp = start;
         for(int j = 0; j<how_many; j++){
-            printf("%s| ", colors[current_play[0][temp]]);
+            printf("%s| ", colors[hand[0][temp]]);
             if(i==1){
-                printf("%c", symbolmatcher(current_play[1][temp]));
+                printf("%c", symbolmatcher(hand[1][temp]));
             }
             else{
                 putchar(' ');
@@ -243,7 +243,7 @@ void draw_cards(int how_many, int current_play[2][30], int k, int start){
     }
     temp = start;
     for(int i = 0; i<how_many; i++){
-        printf("%s ---  ", colors[current_play[0][temp]]);
+        printf("%s ---  ", colors[hand[0][temp]]);
         temp++;
     }
     printf(RESET "\n");
@@ -297,8 +297,9 @@ int sumcheck(int symbol, int sum, int *flag){
 
 int game(int deck[][14], int *played_cards){
     int setup = 0;
-    int current_play[2][30] = {0};
-    int k = 0;
+    int dealerhand[2][20] = {0};
+    int playerhand[2][20] = {0};
+    int dealerlimit = 0, playerlimit = 0; 
     int suit, rank, dealersum = 0, playersum = 0, softflagdealer = 0, softflagplayer = 0;
     
     do{ //Dealer
@@ -306,42 +307,38 @@ int game(int deck[][14], int *played_cards){
         rank = rand()%14;
         if(deck[suit][rank]==0){
             deck[suit][rank]++;
-            current_play[0][k] = suit;
-            current_play[1][k] = rank;
-            k++;
+            dealerhand[0][dealerlimit] = suit;
+            dealerhand[1][dealerlimit] = rank;
+            dealerlimit++;
             dealersum = sumcheck(rank, dealersum, &softflagdealer);
             (*played_cards)++;
-            setup++;
             (*played_cards) = card_check(*played_cards, deck);
         }
-    } while(setup<=1);
-    
-    setup = 0;
+    } while(dealerlimit<=1);
     
     do{ //Player
         suit = rand()%4;
         rank = rand()%14;
         if(deck[suit][rank]==0){
             deck[suit][rank]++;
-            current_play[0][k] = suit;
-            current_play[1][k] = rank;
-            k++;
+            playerhand[0][playerlimit] = suit;
+            playerhand[1][playerlimit] = rank;
+            playerlimit++;
             playersum = sumcheck(rank, playersum, &softflagplayer);
             (*played_cards)++;
-            setup++;
             *played_cards = card_check(*played_cards, deck);
         }
-    } while(setup<=1);
+    } while(playerlimit<=1);
     
     int start = 0;
     int player_turn = 0;
-    int choice, playerlimit = 2, dealerlimit = 2;
+    int choice;
     while(player_turn==0){
         printf("Dealer\n"); 
-        draw_cards(dealerlimit, current_play, k, 0);
+        draw_cards(dealerlimit, dealerhand);
         printf("Sum: %d\n", dealersum);
         printf("Player\n");
-        draw_cards(playerlimit, current_play, k, 2);
+        draw_cards(playerlimit, playerhand);
         printf("Sum: %d\n", playersum);
         if(playersum>=21 || dealersum>=21){
             break;
@@ -358,9 +355,9 @@ int game(int deck[][14], int *played_cards){
                 rank = rand()%14;
                 if(deck[suit][rank]==0){
                     deck[suit][rank]++;
-                    current_play[0][k] = suit;
-                    current_play[1][k] = rank;
-                    k++;
+                    playerhand[0][playerlimit] = suit;
+                    playerhand[1][playerlimit] = rank;
+                    playerlimit++;
                     playersum = sumcheck(rank, playersum, &softflagplayer);
                     (*played_cards)++;
                     choice++;
@@ -398,22 +395,21 @@ int game(int deck[][14], int *played_cards){
                 rank = rand()%14;
                 if(deck[suit][rank]==0){
                     deck[suit][rank]++;
-                    current_play[0][k] = suit;
-                    current_play[1][k] = rank;
-                    k++;
+                    dealerhand[0][dealerlimit] = suit;
+                    dealerhand[1][dealerlimit] = rank;
+                    dealerlimit++;
                     dealersum = sumcheck(rank, dealersum, &softflagdealer);
                     (*played_cards)++;
                     dealerlimit++;
-                    setup++;
                     *played_cards = card_check(*played_cards, deck);
                 }
             } while(dealersum<17 && dealersum<=playersum);
 
             printf("Dealer\n"); 
-            draw_cards(dealerlimit, current_play, k, 0);
+            draw_cards(dealerlimit, dealerhand);
             printf("Sum: %d\n", dealersum);
             printf("Player\n");
-            draw_cards(playerlimit, current_play, k, 2);
+            draw_cards(playerlimit, playerhand);
             printf("Sum: %d\n", playersum);
 
             if(dealersum>21){
