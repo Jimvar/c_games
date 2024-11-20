@@ -477,7 +477,7 @@ int main(){
             do{
                 printf("Choose bet(You have %d money): ", money);
                 scanf("%d", &bet);
-            } while(bet>money && bet>0);
+            } while(bet>money || bet<=0);
             money -=bet;
             
             won = game(deck, &played_cards);
@@ -504,6 +504,7 @@ int main(){
             do{
                 printf("Choose what to do next:\n1. Play again?\n2.Quit\n3.End game and put your money in the leaderboard\n");
                 again = getchar();
+                while (getchar() != '\n');
             } while(again<'1' || again>'3');
 
             if(again=='2'){
