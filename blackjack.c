@@ -4,8 +4,8 @@
 
 #define GREEN "\x1b[1;32m"
 #define RED     "\x1b[1;31m"
-#define BBLU "\e[1;34m"
-#define BMAG "\e[1;35m"
+#define BBLU "\x1b[1;34m"
+#define BMAG "\x1b[1;35m"
 #define RESET   "\x1b[0m"
 
 const char *colors[] = {
@@ -412,7 +412,7 @@ int game(int deck[][14], int *played_cards){
                     dealerlimit++;
                     *played_cards = card_check(*played_cards, deck);
                 }
-            } while(dealersum<17 && dealersum<=playersum);
+            } while(dealersum<17);
 
             printf("Dealer\n"); 
             draw_cards(dealerlimit, dealerhand);
@@ -471,8 +471,8 @@ int main(){
         int played_cards = 0;
         int bet, won;
         
-        char again = '1';
-        while(again=='1'){
+        int again = 1;
+        while(again==1){
             
             do{
                 printf("Choose bet(You have %d money): ", money);
@@ -483,10 +483,10 @@ int main(){
             won = game(deck, &played_cards);
             
             if(won==0){
-                printf("You lost %d money!\n", bet);
+                printf( RED "You lost %d money!\n" RESET, bet);
             }
             else if(won==1){
-                printf("You won %d money!\n", bet);
+                printf(GREEN "You won %d money!\n" RESET, bet);
                 money += 2*bet;
             }
             else if(won==2){
@@ -496,21 +496,20 @@ int main(){
             savegame(name, &money, &seed, deck);
 
             if(money==0){
-                printf("You lost completely!\n");
+                printf(RED "You lost completely!\n" RESET);
                 leaderboard_save_delete(money);
                 break;
             }
 
             do{
-                printf("Choose what to do next:\n1. Play again?\n2.Quit\n3.End game and put your money in the leaderboard\n");
-                again = getchar();
-                while (getchar() != '\n');
-            } while(again<'1' || again>'3');
+                printf(GREEN "Choose what to do next:\n1. Play again?\n2.Quit\n3.End game and put your money in the leaderboard\n" RESET);
+                scanf("%d", &again);
+            } while(again<1 || again>3);
 
-            if(again=='2'){
+            if(again==2){
                 return 0;
             }
-            else if(again == '3'){
+            else if(again == 3){
                 leaderboard_save_delete(money);
             }
         }
