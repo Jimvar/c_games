@@ -471,8 +471,8 @@ int main(){
         int played_cards = 0;
         int bet, won;
         
-        int again = 1;
-        while(again==1){
+        char again = '1';
+        while(again=='1'){
             
             do{
                 printf("Choose bet(You have %d money): ", money);
@@ -498,15 +498,20 @@ int main(){
             if(money==0){
                 printf("You lost completely!\n");
                 leaderboard_save_delete(money);
+                break;
             }
 
-            again = 0;
-            printf("Again?(Write 1): \n");
-            printf("If you want to end the run and save the money to the leaderboard, press 1821: \n");
-            scanf("%d", &again);
-        }
-        if(again==1821){
-            leaderboard_save_delete(money);
+            do{
+                printf("Choose what to do next:\n1. Play again?\n2.Quit\n3.End game and put your money in the leaderboard\n");
+                again = getchar();
+            } while(again<'1' || again>'3');
+
+            if(again=='2'){
+                return 0;
+            }
+            else if(again == '3'){
+                leaderboard_save_delete(money);
+            }
         }
     }
 }
