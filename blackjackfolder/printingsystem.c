@@ -39,7 +39,7 @@ int startupscreen(){
     printf(BORE "Choose:\n");
     printf(GREEN "1. New Game\n");
     flag != -1 ? printf("2. Continue\n") : printf(RED "2. Continue\n");
-    printf(GREEN "3. Leaderboard\n4. Stats\n5. Quit\n" RESET);
+    printf(GREEN "3. Leaderboard\n4. Stats\n5. Quit\n" PLAYER);
 
     if(flag!=-1){
         do{

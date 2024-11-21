@@ -28,7 +28,7 @@ void first_time_set(){
     }
 }
 
-void new_game(char name[], long long *money, long long *seed, int deck[][14]){
+void new_game(char name[], long long *money, long long *seed, float *multiplier, int deck[][14]){
     FILE *fp;
     fp = fopen("savegame.txt", "w");
 
@@ -54,6 +54,9 @@ void new_game(char name[], long long *money, long long *seed, int deck[][14]){
         fprintf(fp, "%lld ", *seed);
     }
 
+    *multiplier = 1.0;
+    fprintf(fp, "%f ", *multiplier);
+
     for(int i = 0; i<4; i++){
         for(int j = 0; j<14; j++){
             fprintf(fp, "%d ", 0);
@@ -63,10 +66,10 @@ void new_game(char name[], long long *money, long long *seed, int deck[][14]){
     fclose(fp);
 }
 
-void load_game(char name[], long long *money, long long *seed, int deck[][14]){
+void load_game(char name[], long long *money, long long *seed, float *multiplier, int deck[][14]){
     FILE *fp;
     fp = fopen("savegame.txt", "r");
-    fscanf(fp, "%s %lld %lld", name, money, seed);
+    fscanf(fp, "%s %lld %lld %f", name, money, seed, multiplier);
     for(int i = 0; i<4; i++){
         for(int j = 0; j<14; j++){
             fscanf(fp, "%d", &deck[i][j]);
@@ -113,12 +116,12 @@ void leaderboard_save_delete(long long money){
     fclose(fp);
 }
 
-void savegame(char name[], long long *money, long long *seed, int deck[][14]){
+void savegame(char name[], long long *money, long long *seed, float *multiplier, int deck[][14]){
     FILE *fp;
     fp = fopen("savegame.txt", "w");
 
     fprintf(fp, "%s %lld ", name, *money);
-    fprintf(fp, "%lld ", *seed);
+    fprintf(fp, "%lld %f ", *seed, *multiplier);
     for(int i = 0; i<4; i++){
         for(int j = 0; j<14; j++){
             fprintf(fp, "%d ", deck[i][j]);
