@@ -1,2 +1,5 @@
-/connectfour
-/tictactoe
+# Ignore executable files (files without extensions)
+*
+!*/
+!*.c
+!*.h
