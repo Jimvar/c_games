@@ -56,7 +56,7 @@ int main(){
             }
             else if(won==1){
                 multiplier += 0.2;
-                printf("%sYou won %s%lld%s money!%s\n", GREEN , YELLOW, (long long)(bet*multiplier), GREEN, RESET);
+                printf("%sYou won %s%lld%s money and a boost to your multiplier!%s\n", GREEN , YELLOW, (long long)(bet*multiplier), GREEN, RESET);
                 money += 2*bet*multiplier;
                 totalwins++;
                 moneygained += bet;
