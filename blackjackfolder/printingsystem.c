@@ -30,26 +30,26 @@ int startupscreen(){
 
     fp = fopen("savegame.txt", "r");
     if(fp==NULL){
-        printf("File not found, exiting...\n");
+        printf("File not found, exiting...\n"); //Checks if file is deleted
         exit(EXIT_FAILURE);
     }
-    int flag = fscanf(fp, "%c", &c);
+    int flag = fscanf(fp, "%c", &c); //Checks if the file is empty; if empty it will print continue as red
     fclose(fp);
 
     printf(BORE "Choose:\n");
     printf(GREEN "1. New Game\n");
-    flag != -1 ? printf("2. Continue\n") : printf(RED "2. Continue\n");
+    flag != -1 ? printf("2. Continue\n") : printf(RED "2. Continue\n"); //Draws depending on if a save exists
     printf(GREEN "3. Leaderboard\n4. Stats\n5. Quit\n" PLAYER);
 
     if(flag!=-1){
         do{
             c = getchar();
-        } while(c<'1' || c>'5');
+        } while(c<'1' || c>'5'); //Everything is available
     }
     else{
         do{
             c = getchar();
-        } while(c!='1' && c!='3' && c!='4' && c!='5');
+        } while(c!='1' && c!='3' && c!='4' && c!='5'); //Everything except continue
     }
 
     return(c - '0');
@@ -61,15 +61,15 @@ void leaderboard(){
 
     fp = fopen("leaderboard.txt", "r");
     if(fp==NULL){
-        printf("File not found, exiting...\n");
+        printf("File not found, exiting...\n"); //Checks if file is deleted
         exit(EXIT_FAILURE);
     }
 
 
     printf(BLUEISH "------------------------------------\nLEADERBOARD\n" RESET);
     for(int i = 0; i<10; i++){
-        fscanf(fp, "%lld", &board[i]);
-        printf("%s%2d. %s%lld\n", BLUEISH, i+1, YELLOW, board[i]);
+        fscanf(fp, "%lld", &board[i]); //Loads with the values
+        printf("%s%2d. %s%lld\n", BLUEISH, i+1, YELLOW, board[i]); //Prints out the values
     }
     printf(BLUEISH"------------------------------------\n" RESET);
     fclose(fp);
@@ -91,16 +91,16 @@ void stats(long long *overallplayed, long long *totalwins, long long *totallost,
 void print_deck(int deck[][14]){
     putchar('\n');
 
-    for(int k = 0; k<4; k++){
-        for(int i = 0; i<14; i++){
+    for(int k = 0; k<4; k++){ //Print every suit
+        for(int i = 0; i<14; i++){ //Top part, print every card of the suit, using the correct color
             printf("%s ---  ", colors[k]);
         }
         putchar('\n');
-        for(int i = 0; i<3; i++){
-            for(int j = 0; j<14; j++){
+        for(int i = 0; i<3; i++){ //Middle part
+            for(int j = 0; j<14; j++){ //The central part of the card
                 printf("| ");
                 if(i==1){
-                    deck[k][j] ?  putchar('-')  : printf("%c", symbolmatcher(j));
+                    deck[k][j] ?  putchar('-')  : printf("%c", symbolmatcher(j)); //When the middle is found, print - if already played; else print the number/symbol
                 }
                 else{
                     putchar(' ');
@@ -110,7 +110,7 @@ void print_deck(int deck[][14]){
             putchar('\n');
         }
         for(int i = 0; i<14; i++){
-            printf(" ---  ");
+            printf(" ---  "); //Bottom part
         }
         putchar('\n');
     }
@@ -119,33 +119,29 @@ void print_deck(int deck[][14]){
 }
 
 void draw_cards(int how_many, int hand[][20]){
-    int start = 0;
-    int temp = start;
 
-    for(int i = 0; i<how_many; i++){
-        printf("%s ---  ", colors[hand[0][temp]]);
-        temp++;
+    for(int i = 0; i<how_many; i++){ //Top part
+        printf("%s ---  ", colors[hand[0][i]]);
     }
+
     putchar('\n');
-    for(int i = 0; i<3; i++){
-        temp = start;
-        for(int j = 0; j<how_many; j++){
-            printf("%s| ", colors[hand[0][temp]]);
+    for(int i = 0; i<3; i++){ //Middle part
+        for(int j = 0; j<how_many; j++){ //All the cards
+            printf("%s| ", colors[hand[0][j]]);
             if(i==1){
-                printf("%c", symbolmatcher(hand[1][temp]));
+                printf("%c", symbolmatcher(hand[1][j])); //Print the correct symbol when the time comes
             }
             else{
                 putchar(' ');
             }
             printf(" | ");
-            temp++;
         }
         putchar('\n');
     }
-    temp = start;
+
     for(int i = 0; i<how_many; i++){
-        printf("%s ---  ", colors[hand[0][temp]]);
-        temp++;
+        printf("%s ---  ", colors[hand[0][i]]); //Bottom part
     }
     printf(RESET "\n");
+
 }

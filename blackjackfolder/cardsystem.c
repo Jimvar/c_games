@@ -7,17 +7,17 @@ int card_check(int played_cards, int deck[][14]){
     if(played_cards==56){
         for(int i = 0 ; i<4; i++){
             for(int j = 0; j<14; j++){
-                deck[i][j] = 0;
+                deck[i][j] = 0; //Resuffles cards
             }
         }
         printf("Resuffled cards!\n\n");
         return 0;
     }
-    return played_cards;
+    return played_cards; //If there are still cards to be played, it returns back
 }
 
 char symbolmatcher(int symbol){
-    if(symbol == 0) return '1';
+    if(symbol == 0) return '1'; //Matches the number(index) generated to the appropriate symbol
     else if(symbol == 1) return '2';
     else if(symbol == 2) return '3';
     else if(symbol == 3) return '4';
@@ -35,15 +35,16 @@ char symbolmatcher(int symbol){
 
 int sumcheck(int symbol, int sum, int *flag){
     int now = 0;
+
     if(symbol==13 && *flag==1){
-        return sum + 1;
+        return sum + 1; //If it stumbles upon another ace, then it counts it as 1
     }
     else if(symbol==13){
-        *flag = 1;
-        now = 1;
+        *flag = 1; //Notifies that we have a potential soft mode
+        now = 1; //Notifies that the current card is an ace
     }
 
-    if(symbol == 0) symbol = 1;
+    if(symbol == 0) symbol = 1; //Makes the number(index) into the appropriate value it holds in the game
     else if(symbol == 1) symbol = 2;
     else if(symbol == 2) symbol = 3;
     else if(symbol == 3) symbol = 4;
@@ -60,133 +61,133 @@ int sumcheck(int symbol, int sum, int *flag){
     if(*flag==1){
         if(now==1){
             if(sum + 11 > 21){
-                *flag = 0;
-                return sum + 1;
+                *flag = 0; 
+                return sum + 1; //If the current card is an ace, but it can't initiate a soft mode, it gets counted as 1
             }
             else{
-                return sum + 11;
+                return sum + 11; //The current card is an ace, and it initiates soft mode
             }
         }
         else{
             if(sum + symbol > 21){
                 *flag = 0;
-                return sum - 10 + symbol;
+                return sum - 10 + symbol; //A previous card was an ace, but the soft mode is broken, so we remove the +10 it gave, and also add the new number
             }
         }
     }
     else{
-        return sum + symbol;
+        return sum + symbol; //We don't need to check if soft mode is broken since we don't have it, so we just add the new number
     }
 }
 
 void carddraw(int deck[][14], int hand[][20], int *limit, int *sum, int *played_cards, int *softflag){
     int suit, rank;
-    suit = rand()%4;
-    rank = rand()%14;
-    if(deck[suit][rank]==0){
-        deck[suit][rank]++;
-        hand[0][*limit] = suit;
-        hand[1][*limit] = rank;
-        (*limit)++;
-        (*sum) = sumcheck(rank, *sum, softflag);
-        (*played_cards)++;
-        (*played_cards) = card_check(*played_cards, deck);
+    suit = rand()%4; //Generates number 0-3
+    rank = rand()%14; //Generates number 0-13
+    if(deck[suit][rank]==0){ //Works as a map. If we play a card, then we cross it off by saying its a one
+        deck[suit][rank]++; //Cross off
+        hand[0][*limit] = suit; 
+        hand[1][*limit] = rank; //Storing the card drawn to the corresponding hand
+        (*limit)++; //How many cards we need to draw
+        (*sum) = sumcheck(rank, *sum, softflag); //Get the value of cards
+        (*played_cards)++; 
+        (*played_cards) = card_check(*played_cards, deck); //See if we need to resuffle the cards; if we do, it resuffles them
     }
 }
 
 int game(char name[], int deck[][14], int *played_cards){
-    int setup = 0;
-    int dealerhand[2][20] = {0};
-    int playerhand[2][20] = {0};
-    int dealerlimit = 0, playerlimit = 0; 
-    int dealersum = 0, playersum = 0, softflagdealer = 0, softflagplayer = 0;
+    int dealerhand[2][20] = {0}; //Stores cards drawn by dealer
+    int playerhand[2][20] = {0}; //Stores cards drawn by player
+    int dealerlimit = 0, playerlimit = 0; //How many cards we need to draw
+    int dealersum = 0, playersum = 0, softflagdealer = 0, softflagplayer = 0; //Value of cards for each entity, and a flag for if they have soft mode
     
     
     do{ //Dealer
         carddraw(deck, dealerhand, &dealerlimit, &dealersum, played_cards, &softflagdealer);
-    } while(dealerlimit<=1);
+    } while(dealerlimit<=1); //Draws two cards
     
     do{ //Player
         carddraw(deck, playerhand, &playerlimit, &playersum, played_cards, &softflagplayer);
-    } while(playerlimit<=1);
+    } while(playerlimit<=1); //Draws two cards
     
-    int start = playersum;
-    int player_turn = 0;
-    int choice, cap = playerlimit;
-    while(player_turn==0){
+
+    int player_turn = 0; //Initialize flag for when we quit from the player mode
+    int choice, cap = playerlimit; //Choice is for the menu later on, cap is initialized to the current cards the player has, to stop a loop later on
+
+    while(player_turn==0){ //Check the flag
         printf(BORE "-------------------------------------\n");
         printf(DEALER "Dealer\n"); 
-        draw_cards(dealerlimit, dealerhand);
+        draw_cards(dealerlimit, dealerhand); //Prints the two cards the dealer has
         printf(DEALER "Sum: %d\n", dealersum);
         printf(BORE "-------------------------------------\n");
-        printf(PLAYER "%s\n", name);
-        draw_cards(playerlimit, playerhand);
+        printf(PLAYER "%s\n", name); 
+        draw_cards(playerlimit, playerhand); //Prints the two cards the player has
         printf(PLAYER "Sum: %d\n", playersum);
         printf(BORE "-------------------------------------\n");
-        if(playersum>=21 || dealersum>=21){
+        if(playersum>=21){ //If the player gets burned or draws a blackjack, break and go to the dealer
             break;
         }
         
         do{
             printf(PLAYER "Choose action: 1. Draw 2. Stand 3. View Deck: ");
             scanf("%d", &choice);
-        } while(choice<=0 || choice>=4);
+        } while(choice<=0 || choice>=4); //Gets choice, while verifying it is in bounds
         
         if(choice==1){
             do{ //Player
                 carddraw(deck, playerhand, &playerlimit, &playersum, played_cards, &softflagplayer);
-            } while(playerlimit<=cap);
-            cap++;
+            } while(playerlimit<=cap); //Stops the loop when a card is drawn
+            cap++; //Raise the cap if the player wants to search again
         }
         else if(choice==2){
-            player_turn++;
+            player_turn++; //Stand and go to dealer
         }
         else{
-            print_deck(deck);
+            print_deck(deck); //Prints deck
         }
     }
 
     if(playersum>21){
-        return 0;
+        return 0; //If they burned, automatic win for dealer
     }
     else{
         if(dealersum>=17){
             if(playersum>dealersum){
-                return 1;
+                return 1; //Lost since he can't draw above than 17
             }
             else if(playersum==dealersum){
-                return 2;
+                return 2; //Tie
             }
             else{
-                return 0;
+                return 0; //Dealer has won
             }
         }
         else{
             do{ //Dealer
                 carddraw(deck, dealerhand, &dealerlimit, &dealersum, played_cards, &softflagdealer);
-            } while(dealersum<17);
+            } while(dealersum<17); //Draw until limit
 
             printf(BORE "-------------------------------------\n");
             printf(DEALER "Dealer\n"); 
-            draw_cards(dealerlimit, dealerhand);
+            draw_cards(dealerlimit, dealerhand); //Draws the dealer's cards
             printf(DEALER "Sum: %d\n", dealersum);
             printf(BORE "-------------------------------------\n");
             printf(PLAYER "%s\n", name);
-            draw_cards(playerlimit, playerhand);
+            draw_cards(playerlimit, playerhand); //Draws the player's cards
             printf(PLAYER "Sum: %d\n", playersum);
             printf(BORE "-------------------------------------\n");
 
             if(dealersum>21){
-                return 1;
+                return 1; //Dealer burned, player wins
             }
             else if(playersum>dealersum){
-                return 1;
+                return 1; //Player won
             }
             else if(playersum==dealersum){
-                return 2;
+                return 2; //Tie
             }
             else{
-                return 0;
+                return 0; //Player lost
             }
 
         }
