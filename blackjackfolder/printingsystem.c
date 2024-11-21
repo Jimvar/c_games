@@ -75,8 +75,17 @@ void leaderboard(){
     fclose(fp);
 }
 
-void stats(long long *overallplayed, long long *totalwins, long long *totallost, long long *totalties, long long *moneygained, long long *moneylost){
-    printf("%lld %lld %lld %lld %lld %lld\n\n", *overallplayed, *totalwins, *totallost, *totalties, *moneygained, *moneylost);
+void stats(long long *overallplayed, long long *totalwins, long long *totallost, long long *totalties, long long *moneygained, long long *moneylost) {
+    printf("------------------------------------------------\n");
+    printf("|                 Stats Page                   |\n");
+    printf("------------------------------------------------\n");
+    printf("| Overall games played:  %20lld |\n", *overallplayed);
+    printf("| Total wins:            %20lld |\n", *totalwins);
+    printf("| Total losses:          %20lld |\n", *totallost);
+    printf("| Total ties:            %20lld |\n", *totalties);
+    printf("| Money gained:          %20lld |\n", *moneygained);
+    printf("| Money lost:            %20lld |\n", *moneylost);
+    printf("------------------------------------------------\n");
 }
 
 void print_deck(int deck[][14]){
