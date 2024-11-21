@@ -14,7 +14,6 @@ void leaderboard();
 void stats(long long *overallplayed, long long *totalwins, long long *totallost, long long *totalties, long long *moneygained, long long *moneylost);
 void print_deck(int deck[][14]);
 void draw_cards(int how_many, int hand[][20]);
-void carddraw(int deck[][14], int hand[][20], int *limit, int *sum, int *played_cards, int *softflag);
 
 
 #endif 

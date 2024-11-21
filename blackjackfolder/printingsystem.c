@@ -140,19 +140,3 @@ void draw_cards(int how_many, int hand[][20]){
     }
     printf(RESET "\n");
 }
-
-void carddraw(int deck[][14], int hand[][20], int *limit, int *sum, int *played_cards, int *softflag){
-    int suit, rank;
-    suit = rand()%4;
-    rank = rand()%14;
-    if(deck[suit][rank]==0){
-        deck[suit][rank]++;
-        hand[0][*limit] = suit;
-        hand[1][*limit] = rank;
-        (*limit)++;
-        //printf("%d\n", *limit);
-        (*sum) = sumcheck(rank, *sum, softflag);
-        (*played_cards)++;
-        (*played_cards) = card_check(*played_cards, deck);
-    }
-}

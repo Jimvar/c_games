@@ -79,6 +79,21 @@ int sumcheck(int symbol, int sum, int *flag){
     }
 }
 
+void carddraw(int deck[][14], int hand[][20], int *limit, int *sum, int *played_cards, int *softflag){
+    int suit, rank;
+    suit = rand()%4;
+    rank = rand()%14;
+    if(deck[suit][rank]==0){
+        deck[suit][rank]++;
+        hand[0][*limit] = suit;
+        hand[1][*limit] = rank;
+        (*limit)++;
+        (*sum) = sumcheck(rank, *sum, softflag);
+        (*played_cards)++;
+        (*played_cards) = card_check(*played_cards, deck);
+    }
+}
+
 int game(int deck[][14], int *played_cards){
     int setup = 0;
     int dealerhand[2][20] = {0};
@@ -97,7 +112,7 @@ int game(int deck[][14], int *played_cards){
     
     int start = playersum;
     int player_turn = 0;
-    int choice;
+    int choice, cap = playerlimit;
     while(player_turn==0){
         printf("Dealer\n"); 
         draw_cards(dealerlimit, dealerhand);
@@ -117,8 +132,8 @@ int game(int deck[][14], int *played_cards){
         if(choice==1){
             do{ //Player
                 carddraw(deck, playerhand, &playerlimit, &playersum, played_cards, &softflagplayer);
-            } while(start==playersum);
-            start = playersum;
+            } while(playerlimit<=cap);
+            cap++;
         }
         else if(choice==2){
             player_turn++;
