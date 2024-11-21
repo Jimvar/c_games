@@ -38,17 +38,17 @@ int startupscreen(){
     printf("Choose:\n");
     printf(GREEN "1. New Game\n");
     flag != -1 ? printf("2. Continue\n") : printf(RED "2. Continue\n");
-    printf(GREEN "3. Leaderboard\n" RESET);
+    printf(GREEN "3. Leaderboard\n4. Stats\n5. Quit\n" RESET);
 
     if(flag!=-1){
         do{
             c = getchar();
-        } while(c<'1' || c>'3');
+        } while(c<'1' || c>'5');
     }
     else{
         do{
             c = getchar();
-        } while(c!='1' && c!='3');
+        } while(c!='1' && c!='3' && c!='4' && c!='5');
     }
 
     return(c - '0');
@@ -72,6 +72,10 @@ void leaderboard(){
     }
     printf("------------------------------------\n");
     fclose(fp);
+}
+
+void stats(int *overallplayed, int *totalwins, int *totallost, int *totalties, int *moneygained, int *moneylost){
+    printf("%d %d %d %d %d %d\n\n", *overallplayed, *totalwins, *totallost, *totalties, *moneygained, *moneylost);
 }
 
 void print_deck(int deck[][14]){

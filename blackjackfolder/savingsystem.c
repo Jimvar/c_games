@@ -19,6 +19,13 @@ void first_time_set(){
         }
         fclose(fp);
     }
+
+    fp = fopen("stats.txt", "r");
+    if(fp==NULL){
+        fp = fopen("stats.txt", "w");
+        fprintf(fp, "%d %d %d %d %d %d", 0, 0, 0, 0, 0, 0);
+        fclose(fp);
+    }
 }
 
 void new_game(char name[], int *money, int *seed, int deck[][14]){
@@ -68,6 +75,13 @@ void load_game(char name[], int *money, int *seed, int deck[][14]){
     fclose(fp);
 }
 
+void load_stats(int *overallplayed, int *totalwins, int *totallost, int *totalties, int *moneygained, int *moneylost){
+    FILE *fp;
+    fp = fopen("stats.txt", "r");
+    fscanf(fp, "%d %d %d %d %d %d", overallplayed, totalwins, totallost, totalties, moneygained, moneylost);
+    fclose(fp);
+}
+
 void leaderboard_save_delete(int money){
     FILE *fp;
     int board[11];
@@ -110,7 +124,13 @@ void savegame(char name[], int *money, int *seed, int deck[][14]){
             fprintf(fp, "%d ", deck[i][j]);
         }
     }
-
     fclose(fp);
+}
 
+void savestats(int *overallplayed, int *totalwins, int *totallost, int *totalties, int *moneygained, int *moneylost){
+    FILE *fp;
+    fp = fopen("stats.txt", "w");
+
+    fprintf(fp, "%d %d %d %d %d %d", *overallplayed, *totalwins, *totallost, *totalties, *moneygained, *moneylost);
+    fclose(fp);
 }
