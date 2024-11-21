@@ -15,14 +15,6 @@ int startupscreen(){
     char c;
     FILE *fp;
 
-    fp = fopen("savegame.txt", "r");
-    if(fp==NULL){
-        printf("File not found, exiting...\n");
-        exit(EXIT_FAILURE);
-    }
-    int flag = fscanf(fp, "%c", &c);
-    fclose(fp);
-
     printf("\n /$$$$$$$  /$$                     /$$                                     /$$      \n");
     printf("| $$__  $$| $$                    | $$                                    | $$      \n");
     printf("| $$  \\ $$| $$  /$$$$$$   /$$$$$$$| $$   /$$       /$$  /$$$$$$   /$$$$$$$| $$   /$$\n");
@@ -34,6 +26,15 @@ int startupscreen(){
     printf("                                             /$$  | $$                              \n");
     printf("                                            |  $$$$$$/                              \n");
     printf("                                             \\______/                               \n");
+
+
+    fp = fopen("savegame.txt", "r");
+    if(fp==NULL){
+        printf("File not found, exiting...\n");
+        exit(EXIT_FAILURE);
+    }
+    int flag = fscanf(fp, "%c", &c);
+    fclose(fp);
 
     printf("Choose:\n");
     printf(GREEN "1. New Game\n");
@@ -56,7 +57,7 @@ int startupscreen(){
 
 void leaderboard(){
     FILE *fp;
-    int board[10];
+    long long board[10];
 
     fp = fopen("leaderboard.txt", "r");
     if(fp==NULL){
@@ -67,15 +68,15 @@ void leaderboard(){
 
     printf("------------------------------------\nLEADERBOARD\n");
     for(int i = 0; i<10; i++){
-        fscanf(fp, "%d", &board[i]);
-        printf("%2d. %d\n", i+1, board[i]);
+        fscanf(fp, "%lld", &board[i]);
+        printf("%2d. %lld\n", i+1, board[i]);
     }
     printf("------------------------------------\n");
     fclose(fp);
 }
 
-void stats(int *overallplayed, int *totalwins, int *totallost, int *totalties, int *moneygained, int *moneylost){
-    printf("%d %d %d %d %d %d\n\n", *overallplayed, *totalwins, *totallost, *totalties, *moneygained, *moneylost);
+void stats(long long *overallplayed, long long *totalwins, long long *totallost, long long *totalties, long long *moneygained, long long *moneylost){
+    printf("%lld %lld %lld %lld %lld %lld\n\n", *overallplayed, *totalwins, *totallost, *totalties, *moneygained, *moneylost);
 }
 
 void print_deck(int deck[][14]){

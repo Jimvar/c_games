@@ -28,30 +28,30 @@ void first_time_set(){
     }
 }
 
-void new_game(char name[], int *money, int *seed, int deck[][14]){
+void new_game(char name[], long long *money, long long *seed, int deck[][14]){
     FILE *fp;
     fp = fopen("savegame.txt", "w");
 
     printf("Write your name: ");
     scanf("%49s", name);
     *money = 1000;
-    fprintf(fp, "%s %d ", name, *money);
+    fprintf(fp, "%s %lld ", name, *money);
     
     printf("Do you want to manually set a seed or have it random? Press 1 or 2: ");
-    int answer;
+    long long answer;
     do{
-        scanf("%d", &answer);
+        scanf("%lld", &answer);
     } while(answer!=1 && answer!=2);
     
     if(answer==1){
         printf("Write your seed: ");
-        scanf("%d", &answer);
+        scanf("%lld", &answer);
         *seed = answer;
-        fprintf(fp, "%d ", *seed);
+        fprintf(fp, "%lld ", *seed);
     }
     else{
         *seed = time(NULL);
-        fprintf(fp, "%d ", *seed);
+        fprintf(fp, "%lld ", *seed);
     }
 
     for(int i = 0; i<4; i++){
@@ -63,10 +63,10 @@ void new_game(char name[], int *money, int *seed, int deck[][14]){
     fclose(fp);
 }
 
-void load_game(char name[], int *money, int *seed, int deck[][14]){
+void load_game(char name[], long long *money, long long *seed, int deck[][14]){
     FILE *fp;
     fp = fopen("savegame.txt", "r");
-    fscanf(fp, "%s %d %d", name, money, seed);
+    fscanf(fp, "%s %lld %lld", name, money, seed);
     for(int i = 0; i<4; i++){
         for(int j = 0; j<14; j++){
             fscanf(fp, "%d", &deck[i][j]);
@@ -75,20 +75,20 @@ void load_game(char name[], int *money, int *seed, int deck[][14]){
     fclose(fp);
 }
 
-void load_stats(int *overallplayed, int *totalwins, int *totallost, int *totalties, int *moneygained, int *moneylost){
+void load_stats(long long *overallplayed, long long *totalwins, long long *totallost, long long *totalties, long long *moneygained, long long *moneylost){
     FILE *fp;
     fp = fopen("stats.txt", "r");
-    fscanf(fp, "%d %d %d %d %d %d", overallplayed, totalwins, totallost, totalties, moneygained, moneylost);
+    fscanf(fp, "%lld %lld %lld %lld %lld %lld", overallplayed, totalwins, totallost, totalties, moneygained, moneylost);
     fclose(fp);
 }
 
-void leaderboard_save_delete(int money){
+void leaderboard_save_delete(long long money){
     FILE *fp;
-    int board[11];
+    long long board[11];
 
     fp = fopen("leaderboard.txt", "r");
     for(int i = 0; i<10; i++){
-        fscanf(fp, "%d", &board[i]);
+        fscanf(fp, "%lld", &board[i]);
     }
     fclose(fp);
     board[10] = money;
@@ -105,7 +105,7 @@ void leaderboard_save_delete(int money){
 
     fp = fopen("leaderboard.txt", "w");
     for(int i = 0; i<10; i++){
-        fprintf(fp, "%d\n", board[i]);
+        fprintf(fp, "%lld\n", board[i]);
     }
     fclose(fp);
 
@@ -113,12 +113,12 @@ void leaderboard_save_delete(int money){
     fclose(fp);
 }
 
-void savegame(char name[], int *money, int *seed, int deck[][14]){
+void savegame(char name[], long long *money, long long *seed, int deck[][14]){
     FILE *fp;
     fp = fopen("savegame.txt", "w");
 
-    fprintf(fp, "%s %d ", name, *money);
-    fprintf(fp, "%d ", *seed);
+    fprintf(fp, "%s %lld ", name, *money);
+    fprintf(fp, "%lld ", *seed);
     for(int i = 0; i<4; i++){
         for(int j = 0; j<14; j++){
             fprintf(fp, "%d ", deck[i][j]);
@@ -127,10 +127,10 @@ void savegame(char name[], int *money, int *seed, int deck[][14]){
     fclose(fp);
 }
 
-void savestats(int *overallplayed, int *totalwins, int *totallost, int *totalties, int *moneygained, int *moneylost){
+void save_stats(long long *overallplayed, long long *totalwins, long long *totallost, long long *totalties, long long *moneygained, long long *moneylost){
     FILE *fp;
     fp = fopen("stats.txt", "w");
 
-    fprintf(fp, "%d %d %d %d %d %d", *overallplayed, *totalwins, *totallost, *totalties, *moneygained, *moneylost);
+    fprintf(fp, "%lld %lld %lld %lld %lld %lld", *overallplayed, *totalwins, *totallost, *totalties, *moneygained, *moneylost);
     fclose(fp);
 }

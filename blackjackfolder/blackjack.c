@@ -8,8 +8,9 @@
 int main(){
     first_time_set();
     char name[50];
-    int money, seed, choice, deck[4][14];
-    int overallplayed, totalwins, totallost, totalties, moneygained, moneylost;
+    long long money, seed;
+    int choice, deck[4][14];
+    long long overallplayed, totalwins, totallost, totalties, moneygained, moneylost;
 
     while(1){
         load_stats(&overallplayed, &totalwins, &totallost, &totalties, &moneygained, &moneylost);
@@ -33,25 +34,26 @@ int main(){
         }
 
         srand(seed);
-        int bet, won, played_cards = 0, again = 1;
+        int won, played_cards = 0, again = 1;
+        long long bet;
 
         while(again==1){
             
             do{
-                printf("Choose bet(You have %d money): ", money);
-                scanf("%d", &bet);
+                printf("Choose bet(You have %lld money): ", money);
+                scanf("%lld", &bet);
             } while(bet>money || bet<=0);
             money -=bet;
             
             won = game(deck, &played_cards);
             overallplayed++;
             if(won==0){
-                printf( RED "You lost %d money!\n" RESET, bet);
+                printf( RED "You lost %lld money!\n" RESET, bet);
                 totallost++;
                 moneylost += bet;
             }
             else if(won==1){
-                printf(GREEN "You won %d money!\n" RESET, bet);
+                printf(GREEN "You won %lld money!\n" RESET, bet);
                 money += 2*bet;
                 totalwins++;
                 moneygained += bet;
@@ -62,7 +64,7 @@ int main(){
                 totalties++;
             }
             savegame(name, &money, &seed, deck);
-            savestats(&overallplayed, &totalwins, &totallost, &totalties, &moneygained, &moneylost);
+            save_stats(&overallplayed, &totalwins, &totallost, &totalties, &moneygained, &moneylost);
 
             if(money==0){
                 printf(RED "You lost completely!\n" RESET);
