@@ -100,7 +100,7 @@ void print_deck(int deck[][14]){
             for(int j = 0; j<14; j++){ //The central part of the card
                 printf("| ");
                 if(i==1){
-                    deck[k][j] ?  putchar('-')  : printf("%c", symbolmatcher(j)); //When the middle is found, print - if already played; else print the number/symbol
+                    deck[k][j] ? putchar('-') : printf("%c", symbolmatcher(j)); //When the middle is found, print - if already played; else print the number/symbol
                 }
                 else{
                     putchar(' ');

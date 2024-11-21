@@ -37,6 +37,7 @@ int main(){
         srand(seed); //Setting up the RNG with the seed
         int won, played_cards = 0, again = 1; //won houses what happened in the game, played_cards is a counter and again continues until the player wants to exit or end the playthrough
         long long bet; //houses the bet, made long long since money is also long long
+        int double_down, flagdoubling = 0; //Flag for if the can double down or not, and flag for if they did double down or not
 
         while(again==1){
             
@@ -46,8 +47,20 @@ int main(){
             } while(bet>money || bet<=0); //Waits for input of player, and makes sure he doesn't give a false bet
             money -=bet; //The bet gets withdrawn from the balance
             
-            won = game(name, deck, &played_cards); //Game is played
+            if(money>=bet){
+                double_down = 1; //They can double_down
+            }
+            else{
+                double_down = 0; //They can't double_down
+            }
+
+            won = game(name, deck, &played_cards, double_down, &flagdoubling); //Game is played
             overallplayed++; //Stat counter
+            if(flagdoubling){ //They doubled
+                money -=bet; //The extra bet gets withdrawn from the balance
+                bet *= 2; //Doubles reward
+            }
+
             if(won==0){
                 printf("%sYou lost %s%lld%s money and your x%.1f multiplier!%s\n", RED , YELLOW, bet, RED, multiplier, RESET); 
                 multiplier = 1.0; //Resets multiplier
@@ -57,7 +70,7 @@ int main(){
             else if(won==1){
                 printf("%sYou won %s%lld%s money and a boost to your multiplier!%s\n", GREEN , YELLOW, (long long)(bet*multiplier), GREEN, RESET);
                 money += 2*bet*multiplier; //Awards player with the amount withdrawn, the bet, plus what the multiplier gives
-                multiplier += 0.2; //Multiplier upgraded
+                flagdoubling ? (multiplier += 0.3) : (multiplier += 0.2); //If they doubled down, they get extra multiplier; else standard
                 totalwins++; //Stat counter
                 moneygained += bet; //Stat counter
             }

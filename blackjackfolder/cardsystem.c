@@ -95,12 +95,12 @@ void carddraw(int deck[][14], int hand[][20], int *limit, int *sum, int *played_
     }
 }
 
-int game(char name[], int deck[][14], int *played_cards){
+int game(char name[], int deck[][14], int *played_cards, int double_down, int *flagdoubling){
     int dealerhand[2][20] = {0}; //Stores cards drawn by dealer
     int playerhand[2][20] = {0}; //Stores cards drawn by player
     int dealerlimit = 0, playerlimit = 0; //How many cards we need to draw
     int dealersum = 0, playersum = 0, softflagdealer = 0, softflagplayer = 0; //Value of cards for each entity, and a flag for if they have soft mode
-    
+    *flagdoubling = 0; //Haven't yet doubled
     
     do{ //Dealer
         carddraw(deck, dealerhand, &dealerlimit, &dealersum, played_cards, &softflagdealer);
@@ -124,14 +124,27 @@ int game(char name[], int deck[][14], int *played_cards){
         draw_cards(playerlimit, playerhand); //Prints the two cards the player has
         printf(PLAYER "Sum: %d\n", playersum);
         printf(BORE "-------------------------------------\n");
-        if(playersum>=21){ //If the player gets burned or draws a blackjack, break and go to the dealer
+
+        if(playersum>=21 || *flagdoubling==1){ //If the player gets burned or draws a blackjack or has doubled down, break and go to the dealer
             break;
         }
         
-        do{
-            printf(PLAYER "Choose action: 1. Draw 2. Stand 3. View Deck: ");
-            scanf("%d", &choice);
-        } while(choice<=0 || choice>=4); //Gets choice, while verifying it is in bounds
+        if(double_down){
+            do{
+                printf(PLAYER "Choose action: 1. Draw 2. Stand 3. View Deck %s4. Double Down:%s ", GREEN, PLAYER);
+                scanf("%d", &choice);
+            } while(choice<=0 || choice>=5); //Include doubling
+            if(choice==4){
+                choice = 1; //To draw card
+                *flagdoubling = 1; //Notify main() of doubling
+            }
+        }
+        else{
+            do{
+                printf(PLAYER "Choose action: 1. Draw 2. Stand 3. View Deck %s4. Double Down:%s ", RED, PLAYER);
+                scanf("%d", &choice); 
+            } while(choice<=0 || choice>=4); //Exclude doubling
+        }
         
         if(choice==1){
             do{ //Player
