@@ -15,17 +15,17 @@ int startupscreen(){
     char c;
     FILE *fp;
 
-    printf("\n /$$$$$$$  /$$                     /$$                                     /$$      \n");
-    printf("| $$__  $$| $$                    | $$                                    | $$      \n");
-    printf("| $$  \\ $$| $$  /$$$$$$   /$$$$$$$| $$   /$$       /$$  /$$$$$$   /$$$$$$$| $$   /$$\n");
-    printf("| $$$$$$$ | $$ |____  $$ /$$_____/| $$  /$$/      |__/ |____  $$ /$$_____/| $$  /$$/\n");
-    printf("| $$__  $$| $$  /$$$$$$$| $$      | $$$$$$/        /$$  /$$$$$$$| $$      | $$$$$$/ \n");
-    printf("| $$  \\ $$| $$ /$$__  $$| $$      | $$_  $$       | $$ /$$__  $$| $$      | $$_  $$ \n");
-    printf("| $$$$$$$/| $$|  $$$$$$$|  $$$$$$$| $$ \\  $$      | $$|  $$$$$$$|  $$$$$$$| $$ \\  $$\n");
-    printf("|_______/ |__/ \\_______/ \\_______/|__/  \\__/      | $$ \\_______/ \\_______/|__/  \\__/\n");
-    printf("                                             /$$  | $$                              \n");
+    printf("\n %s/$$$$$$$  /$$                     /$$                                     %s/$$%s      \n",BBLU, RED, RESET);
+    printf("%s| $$__  $$| $$                    | $$                                    %s| $$%s      \n",BBLU, RED, RESET);
+    printf("%s| $$  \\ $$| $$  /$$$$$$   /$$$$$$$| $$   /$$       %s/$$  /$$$$$$   /$$$$$$$| $$   /$$%s\n",BBLU, RED, RESET);
+    printf("%s| $$$$$$$ | $$ |____  $$ /$$_____/| $$  /$$/      %s|__/ |____  $$ /$$_____/| $$  /$$/%s\n",BBLU, RED, RESET);
+    printf("%s| $$__  $$| $$  /$$$$$$$| $$      | $$$$$$/        %s/$$  /$$$$$$$| $$      | $$$$$$/%s \n",BBLU, RED, RESET);
+    printf("%s| $$  \\ $$| $$ /$$__  $$| $$      | $$_  $$       %s| $$ /$$__  $$| $$      | $$_  $$%s \n",BBLU, RED, RESET);
+    printf("%s| $$$$$$$/| $$|  $$$$$$$|  $$$$$$$| $$ \\  $$      %s| $$|  $$$$$$$|  $$$$$$$| $$ \\  $$%s\n",BBLU, RED, RESET);
+    printf("%s|_______/ |__/ \\_______/ \\_______/|__/  \\__/      %s| $$ \\_______/ \\_______/|__/  \\__/%s\n",BBLU, RED, RESET);
+    printf("                                             %s/$$  | $$                              \n", RED);
     printf("                                            |  $$$$$$/                              \n");
-    printf("                                             \\______/                               \n");
+    printf("                                             \\______/%s                               \n", RESET);
 
 
     fp = fopen("savegame.txt", "r");
@@ -36,7 +36,7 @@ int startupscreen(){
     int flag = fscanf(fp, "%c", &c);
     fclose(fp);
 
-    printf("Choose:\n");
+    printf(BORE "Choose:\n");
     printf(GREEN "1. New Game\n");
     flag != -1 ? printf("2. Continue\n") : printf(RED "2. Continue\n");
     printf(GREEN "3. Leaderboard\n4. Stats\n5. Quit\n" RESET);
@@ -66,26 +66,26 @@ void leaderboard(){
     }
 
 
-    printf("------------------------------------\nLEADERBOARD\n");
+    printf(BLUEISH "------------------------------------\nLEADERBOARD\n" RESET);
     for(int i = 0; i<10; i++){
         fscanf(fp, "%lld", &board[i]);
-        printf("%2d. %lld\n", i+1, board[i]);
+        printf("%s%2d. %s%lld\n", BLUEISH, i+1, YELLOW, board[i]);
     }
-    printf("------------------------------------\n");
+    printf(BLUEISH"------------------------------------\n" RESET);
     fclose(fp);
 }
 
 void stats(long long *overallplayed, long long *totalwins, long long *totallost, long long *totalties, long long *moneygained, long long *moneylost) {
-    printf("------------------------------------------------\n");
+    printf("%s------------------------------------------------\n", PINK);
     printf("|                 Stats Page                   |\n");
     printf("------------------------------------------------\n");
-    printf("| Overall games played:  %20lld |\n", *overallplayed);
-    printf("| Total wins:            %20lld |\n", *totalwins);
-    printf("| Total losses:          %20lld |\n", *totallost);
-    printf("| Total ties:            %20lld |\n", *totalties);
-    printf("| Money gained:          %20lld |\n", *moneygained);
-    printf("| Money lost:            %20lld |\n", *moneylost);
-    printf("------------------------------------------------\n");
+    printf("| Overall games played:  %s%21lld%s |\n", BORE, *overallplayed, PINK);
+    printf("| Total wins:            %s%21lld%s |\n", GREEN, *totalwins, PINK);
+    printf("| Total losses:          %s%21lld%s |\n", RED, *totallost, PINK);
+    printf("| Total ties:            %s%21lld%s |\n", BORE, *totalties, PINK);
+    printf("| Money gained:          %s%21lld%s |\n", YELLOW, *moneygained, PINK);
+    printf("| Money lost:            %s%21lld%s |\n", RED, *moneylost, PINK);
+    printf("------------------------------------------------%s\n", RESET);
 }
 
 void print_deck(int deck[][14]){

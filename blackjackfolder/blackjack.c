@@ -40,7 +40,7 @@ int main(){
         while(again==1){
             
             do{
-                printf("Choose bet(You have %lld money): ", money);
+                printf("%sChoose bet(You have %s%lld%s money): ", PLAYER, YELLOW , money, PLAYER);
                 scanf("%lld", &bet);
             } while(bet>money || bet<=0);
             money -=bet;
@@ -48,18 +48,18 @@ int main(){
             won = game(deck, &played_cards);
             overallplayed++;
             if(won==0){
-                printf( RED "You lost %lld money!\n" RESET, bet);
+                printf("%sYou lost %s%lld%s money!%s\n", RED , YELLOW, bet, RED, RESET);
                 totallost++;
                 moneylost += bet;
             }
             else if(won==1){
-                printf(GREEN "You won %lld money!\n" RESET, bet);
+                printf("%sYou won %s%lld%s money!%s\n", GREEN , YELLOW, bet, GREEN, RESET);
                 money += 2*bet;
                 totalwins++;
                 moneygained += bet;
             }
             else if(won==2){
-                printf("You tied!\n");
+                printf(GREEN "You tied!\n" RESET);
                 money += bet;
                 totalties++;
             }
@@ -73,7 +73,7 @@ int main(){
             }
 
             do{
-                printf(GREEN "Choose what to do next:\n1. Play again?\n2.Quit\n3.End game and put your money in the leaderboard\n" RESET);
+                printf(PLAYER "Choose what to do next:\n1. Play again?\n2. Quit\n3. End game and put your money in the leaderboard\n");
                 scanf("%d", &again);
             } while(again<1 || again>3);
 

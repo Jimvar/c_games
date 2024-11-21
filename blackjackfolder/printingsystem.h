@@ -3,9 +3,17 @@
 
 #define GREEN "\x1b[1;32m"
 #define RED   "\x1b[1;31m"
-#define BBLU  "\x1b[1;34m"
+#define BBLU  "\x1b[1;38;5;19m"
 #define BMAG  "\x1b[1;35m"
+#define BLACK "\x1b[1;90m"
 #define RESET "\x1b[0m"
+#define YELLOW "\x1b[1;93m"
+#define CYAN "\x1b[1;38;5;123m"
+#define BLUEISH "\x1b[1;38;5;37m"
+#define PINK "\x1b[1;38;5;210m"
+#define BORE "\x1b[1;38;5;94m"
+#define DEALER "\x1b[1;38;5;88m"
+#define PLAYER "\x1b[0;38;5;69m"
 
 extern const char *colors[];
 

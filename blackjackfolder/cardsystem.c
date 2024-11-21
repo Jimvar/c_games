@@ -114,18 +114,21 @@ int game(int deck[][14], int *played_cards){
     int player_turn = 0;
     int choice, cap = playerlimit;
     while(player_turn==0){
-        printf("Dealer\n"); 
+        printf(BORE "-------------------------------------\n");
+        printf(DEALER "Dealer\n"); 
         draw_cards(dealerlimit, dealerhand);
-        printf("Sum: %d\n", dealersum);
-        printf("Player\n");
+        printf(DEALER "Sum: %d\n", dealersum);
+        printf(BORE "-------------------------------------\n");
+        printf(PLAYER "Player\n");
         draw_cards(playerlimit, playerhand);
-        printf("Sum: %d\n", playersum);
+        printf(PLAYER "Sum: %d\n", playersum);
+        printf(BORE "-------------------------------------\n");
         if(playersum>=21 || dealersum>=21){
             break;
         }
         
         do{
-            printf("Choose action: 1. Draw 2. Stand 3. View Deck: ");
+            printf(PLAYER "Choose action: 1. Draw 2. Stand 3. View Deck: ");
             scanf("%d", &choice);
         } while(choice<=0 || choice>=4);
         
@@ -163,12 +166,15 @@ int game(int deck[][14], int *played_cards){
                 carddraw(deck, dealerhand, &dealerlimit, &dealersum, played_cards, &softflagdealer);
             } while(dealersum<17);
 
-            printf("Dealer\n"); 
+            printf(BORE "-------------------------------------\n");
+            printf(DEALER "Dealer\n"); 
             draw_cards(dealerlimit, dealerhand);
-            printf("Sum: %d\n", dealersum);
-            printf("Player\n");
+            printf(DEALER "Sum: %d\n", dealersum);
+            printf(BORE "-------------------------------------\n");
+            printf(PLAYER "Player\n");
             draw_cards(playerlimit, playerhand);
-            printf("Sum: %d\n", playersum);
+            printf(PLAYER "Sum: %d\n", playersum);
+            printf(BORE "-------------------------------------\n");
 
             if(dealersum>21){
                 return 1;
