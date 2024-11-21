@@ -58,6 +58,7 @@ int startupscreen(){
 void leaderboard(){
     FILE *fp;
     long long board[10];
+    char names[10][50];
 
     fp = fopen("leaderboard.txt", "r");
     if(fp==NULL){
@@ -68,8 +69,8 @@ void leaderboard(){
 
     printf(BLUEISH "------------------------------------\nLEADERBOARD\n" RESET);
     for(int i = 0; i<10; i++){
-        fscanf(fp, "%lld", &board[i]); //Loads with the values
-        printf("%s%2d. %s%lld\n", BLUEISH, i+1, YELLOW, board[i]); //Prints out the values
+        fscanf(fp, "%s %lld", names[i], &board[i]); //Loads with the values
+        printf("%s%2d. %s %s%lld\n", BLUEISH, i+1, names[i], YELLOW, board[i]); //Prints out the values
     }
     printf(BLUEISH"------------------------------------\n" RESET);
     fclose(fp);
@@ -114,6 +115,7 @@ void print_deck(int deck[][14]){
         }
         putchar('\n');
     }
+    
     putchar('\n');
     printf(RESET);
 }

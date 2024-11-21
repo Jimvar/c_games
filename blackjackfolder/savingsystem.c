@@ -15,7 +15,7 @@ void first_time_set(){ //Sets up all the files if the game is for the first time
     if(fp==NULL){
         fp = fopen("leaderboard.txt", "w");
         for(int i = 0; i<10; i++){
-            fprintf(fp, "%d\n", 0);
+            fprintf(fp, "%s %d\n", "DEV", 0);
         }
         fclose(fp);
     }
@@ -87,32 +87,61 @@ void load_stats(long long *overallplayed, long long *totalwins, long long *total
 
 void leaderboard_save_delete(long long money){
     FILE *fp;
+    char users[11][50]; //To track old names, with an extra row
     long long board[11]; //Get leaderboard, with an extra row
 
     fp = fopen("leaderboard.txt", "r");
     for(int i = 0; i<10; i++){
-        fscanf(fp, "%lld", &board[i]); //Read the existing data
+        fscanf(fp, "%s %lld", users[i], &board[i]); //Read the existing data
     }
     fclose(fp);
+
+    fp = fopen("savegame.txt", "r");
+    fscanf(fp, "%s", users[10]); //Store current playthrough name
+    fclose(fp);
     board[10] = money; //Store in the extra row the current run money
+
+    int temp; //Transports numbers
+    char temp2[50]; //Transports names
+    int k; //Helps keep track of the transporting
 
     for (int i = 0; i < 11 - 1; i++) {
         for (int j = 0; j < 11 - i - 1; j++) {
             if (board[j] < board[j + 1]) {
-                int temp = board[j];
+                temp = board[j];
                 board[j] = board[j + 1]; //Bubblesort it and kick the lowest in the last place
                 board[j + 1] = temp;
+                k = 0;
+                while(users[j][k]!='\0'){
+                    temp2[k] = users[j][k];
+                    k++;
+                }
+                temp2[k] = '\0'; //Ensures the string ends properly, this is important since it gets cut of by the while()
+
+                k = 0;
+                while(users[j + 1][k]!='\0'){
+                    users[j][k] = users[j+1][k]; //Follows the numbers
+                    k++;
+                }
+                users[j][k] = '\0';
+
+                k = 0;
+                while(temp2[k]!='\0'){
+                    users[j+1][k] = temp2[k];
+                    k++;
+                }
+                users[j+1][k] = '\0';
             }
         }
     }
 
-    fp = fopen("leaderboard.txt", "w");
+    fp = fopen("leaderboard.txt", "w"); //Clear file
     for(int i = 0; i<10; i++){
-        fprintf(fp, "%lld\n", board[i]); //Save only the top 10
+        fprintf(fp, "%s %lld\n", users[i], board[i]); //Save only the top 10
     }
     fclose(fp);
 
-    fp = fopen("savegame.txt", "w"); //Delete savefile
+    fp = fopen("savegame.txt", "w"); //Clear file
     fclose(fp);
 }
 
