@@ -94,7 +94,7 @@ void carddraw(int deck[][14], int hand[][20], int *limit, int *sum, int *played_
     }
 }
 
-int game(int deck[][14], int *played_cards){
+int game(char name[], int deck[][14], int *played_cards){
     int setup = 0;
     int dealerhand[2][20] = {0};
     int playerhand[2][20] = {0};
@@ -119,7 +119,7 @@ int game(int deck[][14], int *played_cards){
         draw_cards(dealerlimit, dealerhand);
         printf(DEALER "Sum: %d\n", dealersum);
         printf(BORE "-------------------------------------\n");
-        printf(PLAYER "Player\n");
+        printf(PLAYER "%s\n", name);
         draw_cards(playerlimit, playerhand);
         printf(PLAYER "Sum: %d\n", playersum);
         printf(BORE "-------------------------------------\n");
@@ -171,7 +171,7 @@ int game(int deck[][14], int *played_cards){
             draw_cards(dealerlimit, dealerhand);
             printf(DEALER "Sum: %d\n", dealersum);
             printf(BORE "-------------------------------------\n");
-            printf(PLAYER "Player\n");
+            printf(PLAYER "%s\n", name);
             draw_cards(playerlimit, playerhand);
             printf(PLAYER "Sum: %d\n", playersum);
             printf(BORE "-------------------------------------\n");

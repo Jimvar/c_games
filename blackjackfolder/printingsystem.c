@@ -4,10 +4,10 @@
 #include "cardsystem.h"
 
 const char *colors[] = {
-    GREEN,
-    RED,
-    BBLU,
-    BMAG,
+    CARDGRAY,
+    CARDRED,
+    CARDGREEN,
+    CARDYELLOW,
     RESET
 };
 

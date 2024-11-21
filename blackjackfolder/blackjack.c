@@ -46,7 +46,7 @@ int main(){
             } while(bet>money || bet<=0);
             money -=bet;
             
-            won = game(deck, &played_cards);
+            won = game(name, deck, &played_cards);
             overallplayed++;
             if(won==0){
                 printf("%sYou lost %s%lld%s money and your x%.1f multiplier!%s\n", RED , YELLOW, bet, RED, multiplier, RESET);
@@ -55,9 +55,9 @@ int main(){
                 moneylost += bet;
             }
             else if(won==1){
-                multiplier += 0.2;
                 printf("%sYou won %s%lld%s money and a boost to your multiplier!%s\n", GREEN , YELLOW, (long long)(bet*multiplier), GREEN, RESET);
                 money += 2*bet*multiplier;
+                multiplier += 0.2;
                 totalwins++;
                 moneygained += bet;
             }
@@ -76,7 +76,7 @@ int main(){
             }
 
             do{
-                printf(PLAYER "Choose what to do next:\n1. Play again?\n2. Quit\n3. End game and put your money in the leaderboard\n");
+                printf(PLAYER "%s, choose what to do next:\n1. Play again?\n2. Quit\n3. End game and put your money in the leaderboard\n", name);
                 scanf("%d", &again);
             } while(again<1 || again>3);
 
