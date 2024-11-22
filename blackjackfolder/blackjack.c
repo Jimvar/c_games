@@ -12,9 +12,11 @@ int main(){
     int choice, deck[4][14]; //Choice is for the main menu, deck houses the cards
     long long overallplayed, totalwins, totallost, totalties, moneygained, moneylost; //Stats
     float multiplier; //Combo mechanic
+    int achievements_track[6];
 
     while(1){
         load_stats(&overallplayed, &totalwins, &totallost, &totalties, &moneygained, &moneylost); //Loading before entering the menu
+        load_achievements(achievements_track);
         choice = startupscreen(); //Displays the main menu with the 5 choices and waits for response
         if(choice==1){
             new_game(name, &money, &seed, &multiplier, deck); //Makes a new save file(overwriting anything before), and fills it up, as well with the variables
@@ -31,9 +33,14 @@ int main(){
             continue; //Hops back to the main menu
         }
         else if(choice==5){
-            reset_prompt();
+            achievements(achievements_track);
+            continue; //Hops back to the main menu
         }
         else if(choice==6){
+            reset_prompt();
+            continue; //Hops back to the main menu
+        }
+        else if(choice==7){
             return 0; //Ends the game
         }
 

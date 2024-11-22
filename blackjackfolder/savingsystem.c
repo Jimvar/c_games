@@ -8,8 +8,8 @@ void first_time_set(){ //Sets up all the files if the game is for the first time
     fp = fopen("savegame.txt", "r");
     if(fp==NULL){
         fp = fopen("savegame.txt", "w");
-        fclose(fp);
     }
+    fclose(fp);
 
     fp = fopen("leaderboard.txt", "r");
     if(fp==NULL){
@@ -17,15 +17,22 @@ void first_time_set(){ //Sets up all the files if the game is for the first time
         for(int i = 0; i<10; i++){
             fprintf(fp, "%s %d\n", "DEV", 0);
         }
-        fclose(fp);
     }
+    fclose(fp);
 
     fp = fopen("stats.txt", "r");
     if(fp==NULL){
         fp = fopen("stats.txt", "w");
         fprintf(fp, "%d %d %d %d %d %d", 0, 0, 0, 0, 0, 0);
-        fclose(fp);
     }
+    fclose(fp);
+
+    fp = fopen("achievements.txt", "r");
+    if(fp==NULL){
+        fp = fopen("achievements.txt", "w");
+        fprintf(fp, "%d %d %d %d %d %d", 0, 0, 0, 0, 0, 0);
+    }
+    fclose(fp);
 }
 
 void new_game(char name[], long long *money, long long *seed, float *multiplier, int deck[][14]){
@@ -82,6 +89,15 @@ void load_stats(long long *overallplayed, long long *totalwins, long long *total
     FILE *fp;
     fp = fopen("stats.txt", "r");
     fscanf(fp, "%lld %lld %lld %lld %lld %lld", overallplayed, totalwins, totallost, totalties, moneygained, moneylost); //Load everything
+    fclose(fp);
+}
+
+void load_achievements(int achievements_track[]){
+    FILE *fp;
+    fp = fopen("achievements.txt", "r");
+    for(int i = 0; i<6; i++){
+        fscanf(fp, "%d", &achievements_track[i]);
+    }
     fclose(fp);
 }
 
@@ -183,9 +199,9 @@ void resetchoice(int choice){
         fclose(fp);
     }
     else if(choice == 3){
-        //fp = fopen("achievements.txt", "w");
-        //fprintf(fp, "%d %d %d %d %d %d", 0, 0, 0, 0, 0, 0);
-        //fclose(fp);
+        fp = fopen("achievements.txt", "w");
+        fprintf(fp, "%d %d %d %d %d %d", 0, 0, 0, 0, 0, 0);
+        fclose(fp);
     }
     else{
         fp = fopen("leaderboard.txt", "w");
@@ -198,9 +214,9 @@ void resetchoice(int choice){
         fprintf(fp, "%d %d %d %d %d %d", 0, 0, 0, 0, 0, 0);
         fclose(fp);
 
-        //fp = fopen("achievements.txt", "w");
-        //fprintf(fp, "%d %d %d %d %d %d", 0, 0, 0, 0, 0, 0);
-        //fclose(fp);
+        fp = fopen("achievements.txt", "w");
+        fprintf(fp, "%d %d %d %d %d %d", 0, 0, 0, 0, 0, 0);
+        fclose(fp);
     }
 
 }

@@ -23,9 +23,10 @@ extern const char *colors[];
 int startupscreen();
 void leaderboard();
 void stats(long long *overallplayed, long long *totalwins, long long *totallost, long long *totalties, long long *moneygained, long long *moneylost);
+void achievements(int achievements_track[]);
+void reset_prompt();
 void print_deck(int deck[][14]);
 void draw_cards(int how_many, int hand[][20]);
-void reset_prompt();
 
 
 #endif 
