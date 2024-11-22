@@ -39,17 +39,17 @@ int startupscreen(){
     printf(BORE "Choose:\n");
     printf(GREEN "1. New Game\n");
     flag != -1 ? printf("2. Continue\n") : printf(RED "2. Continue\n"); //Draws depending on if a save exists
-    printf(GREEN "3. Leaderboard\n4. Stats\n5. Quit\n" PLAYER);
+    printf(GREEN "3. Leaderboard\n4. Stats\n5. Reset stats\n6. Quit\n" PLAYER);
 
     if(flag!=-1){
         do{
             c = getchar();
-        } while(c<'1' || c>'5'); //Everything is available
+        } while(c<'1' || c>'6'); //Everything is available
     }
     else{
         do{
             c = getchar();
-        } while(c!='1' && c!='3' && c!='4' && c!='5'); //Everything except continue
+        } while(c!='1' && c!='3' && c!='4' && c!='5' && c!='6'); //Everything except continue
     }
 
     return(c - '0');
@@ -146,4 +146,19 @@ void draw_cards(int how_many, int hand[][20]){
     }
     printf(RESET "\n");
 
+}
+
+void reset_prompt(){
+    printf("Do you want to reset:\n1. Leaderboard\n2. Stats\n\n4. Everything\n");
+    int choice, verify;
+    do{
+        scanf("%d", &choice);
+    } while(choice<0 || choice>4);
+    printf("Are you sure? Press 1 for yes, 0 for no: ");
+    do{
+        scanf("%d", &choice);
+    } while(choice !=1 || choice!=0);
+    if(verify){
+        resetchoice(choice);
+    }
 }

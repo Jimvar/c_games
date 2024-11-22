@@ -31,6 +31,9 @@ int main(){
             continue; //Hops back to the main menu
         }
         else if(choice==5){
+            reset_prompt();
+        }
+        else if(choice==6){
             return 0; //Ends the game
         }
 

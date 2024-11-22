@@ -166,3 +166,41 @@ void save_stats(long long *overallplayed, long long *totalwins, long long *total
     fprintf(fp, "%lld %lld %lld %lld %lld %lld", *overallplayed, *totalwins, *totallost, *totalties, *moneygained, *moneylost); //Save the stats
     fclose(fp);
 }
+
+void resetchoice(int choice){
+    FILE *fp;
+
+    if(choice == 1){
+        fp = fopen("leaderboard.txt", "w");
+        for(int i = 0; i<10; i++){
+            fprintf(fp, "%s %d\n", "DEV", 0);
+        }
+        fclose(fp);
+    }
+    else if(choice == 2){
+        fp = fopen("stats.txt", "w");
+        fprintf(fp, "%d %d %d %d %d %d", 0, 0, 0, 0, 0, 0);
+        fclose(fp);
+    }
+    else if(choice == 3){
+        //fp = fopen("achievements.txt", "w");
+        //fprintf(fp, "%d %d %d %d %d %d", 0, 0, 0, 0, 0, 0);
+        //fclose(fp);
+    }
+    else{
+        fp = fopen("leaderboard.txt", "w");
+        for(int i = 0; i<10; i++){
+            fprintf(fp, "%s %d\n", "DEV", 0);
+        }
+        fclose(fp);
+
+        fp = fopen("stats.txt", "w");
+        fprintf(fp, "%d %d %d %d %d %d", 0, 0, 0, 0, 0, 0);
+        fclose(fp);
+
+        //fp = fopen("achievements.txt", "w");
+        //fprintf(fp, "%d %d %d %d %d %d", 0, 0, 0, 0, 0, 0);
+        //fclose(fp);
+    }
+
+}
