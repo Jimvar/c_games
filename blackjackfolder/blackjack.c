@@ -6,12 +6,12 @@
 #include "cardsystem.h" //Includes the logic for the cards
 
 int main(){
-    first_time_set(); //Makes sure every file is availiable; if not it makes them
+    first_time_set(); //Makes sure every file is available; if not it makes them
     char name[50]; //Stores the name of the player
     long long money, seed; //They are made long long to increase range
-    int choice, deck[4][14]; //Choice is for the main menu, deck houses the cards
+    int choice, packs, limitcards, played_cards, deck[5][4][14], buffed_mult; //Choice is for the main menu, deck houses the cards
     long long overallplayed, totalwins, totallost, totalties, moneygained, moneylost; //Stats
-    float multiplier; //Combo mechanic
+    float multiplier, mult_increase = 0.2, mult_double = 0.3; //Combo mechanic
     int achievements_track[6];
 
     while(1){
@@ -19,10 +19,10 @@ int main(){
         load_achievements(achievements_track);
         choice = startupscreen(); //Displays the main menu with the 5 choices and waits for response
         if(choice==1){
-            new_game(name, &money, &seed, &multiplier, deck); //Makes a new save file(overwriting anything before), and fills it up, as well with the variables
+            new_game(name, &money, &seed, &multiplier, &buffed_mult, deck, &packs, &limitcards, &played_cards, achievements_track); //Makes a new save file(overwriting anything before), and fills it up, as well with the variables
         }
         else if(choice==2){
-            load_game(name, &money, &seed, &multiplier, deck); //Gets the existing savefile and loads the variables with the info
+            load_game(name, &money, &seed, &multiplier, &buffed_mult, deck, &packs, &limitcards, &played_cards); //Gets the existing savefile and loads the variables with the info
         }
         else if(choice==3){
             leaderboard(); //Prints out the leaderboard file
@@ -45,7 +45,13 @@ int main(){
         }
 
         srand(seed); //Setting up the RNG with the seed
-        int won, played_cards = 0, again = 1; //won houses what happened in the game, played_cards is a counter and again continues until the player wants to exit or end the playthrough
+        int won, again = 1; //won houses what happened in the game, again continues until the player wants to exit or end the playthrough
+
+        if(buffed_mult==2){
+            mult_increase = 0.5;
+            mult_double = 0.8;
+        }
+
         long long bet; //houses the bet, made long long since money is also long long
         int double_down, flagdoubling = 0; //Flag for if the can double down or not, and flag for if they did double down or not
 
@@ -64,7 +70,7 @@ int main(){
                 double_down = 0; //They can't double_down
             }
 
-            won = game(name, deck, &played_cards, double_down, &flagdoubling); //Game is played
+            won = game(name, deck, &played_cards, double_down, &flagdoubling, packs, limitcards); //Game is played
             overallplayed++; //Stat counter
             if(flagdoubling){ //They doubled
                 money -=bet; //The extra bet gets withdrawn from the balance
@@ -80,7 +86,7 @@ int main(){
             else if(won==1){
                 printf("%sYou won %s%lld%s money and a boost to your multiplier!%s\n", GREEN , YELLOW, (long long)(bet*multiplier), GREEN, RESET);
                 money += 2*bet*multiplier; //Awards player with the amount withdrawn, the bet, plus what the multiplier gives
-                flagdoubling ? (multiplier += 0.3) : (multiplier += 0.2); //If they doubled down, they get extra multiplier; else standard
+                flagdoubling ? (multiplier += mult_double) : (multiplier += mult_increase); //If they doubled down, they get extra multiplier; else standard
                 totalwins++; //Stat counter
                 moneygained += bet; //Stat counter
             }
@@ -89,9 +95,10 @@ int main(){
                 money += bet; //Gives back the money withdrawn
                 totalties++; //Stat counter
             }
-            savegame(name, &money, &seed, &multiplier ,deck); //Saves the current state of the game
+            savegame(name, &money, &seed, &multiplier, &buffed_mult, deck, &packs, &limitcards, &played_cards); //Saves the current state of the game
             save_stats(&overallplayed, &totalwins, &totallost, &totalties, &moneygained, &moneylost); //Saves the stats
             achieve_check(achievements_track, &money, &multiplier, &overallplayed, &totalwins);
+            save_achievements(achievements_track);
 
             if(money==0){
                 printf(RED "You lost completely!\n" RESET);

@@ -95,7 +95,7 @@ void achievements(int achievements_track[]){
     printf("|              Achievements Page               |\n");
     printf("------------------------------------------------\n");
     printf("| %sGet 10k money%s                                |\n", achievements_track[0] ? GREEN : RED, PINK);
-    printf("| %sGet 1m money%s                               |\n", achievements_track[1] ? GREEN : RED, PINK);
+    printf("| %sGet 1m money%s                                 |\n", achievements_track[1] ? GREEN : RED, PINK);
     printf("| %sGet a multiplier of x4.0 or better%s           |\n", achievements_track[2] ? GREEN : RED, PINK);
     printf("| %sPlay 1000 hands%s                              |\n", achievements_track[3] ? GREEN : RED, PINK);
     printf("| %sWin 1000 hands%s                               |\n", achievements_track[4] ? GREEN : RED, PINK);
@@ -103,7 +103,7 @@ void achievements(int achievements_track[]){
     printf("------------------------------------------------%s\n", RESET);
 }
 
-void achieve_check(int achievements_track[], int *money, int *multiplier, int *overallplayed, int *totalwins){
+void achieve_check(int achievements_track[], long long *money, float *multiplier, long long *overallplayed, long long *totalwins){
     if(achievements_track[0]==0 && *money >= 10000){
         printf(YELLOW "Congrats on getting over 10k money!\n");
         printf("New functionality for custom games unlocked! You can now choose a specific amount of money for the start, up to 10k!\n" PLAYER);
@@ -129,7 +129,7 @@ void achieve_check(int achievements_track[], int *money, int *multiplier, int *o
         printf("New functionality for custom games unlocked! You can now choose to play with more decks simultaneously, upping the difficulty!\n" PLAYER);
         achievements_track[4]++;
     }
-    if(achievements_track[5]==0 && *money <= 0){
+    if(achievements_track[5]==0 && *money < 0){
         printf(YELLOW "Congrats on.... breaking the game?\n");
         printf("Either you messed with the savefile or you actually did that. Respect either way!\n" PLAYER);
         achievements_track[5]++;
@@ -153,33 +153,34 @@ void reset_prompt(){
     }
 }
 
-void print_deck(int deck[][14]){
+void print_deck(int deck[][4][14], int packs){
     putchar('\n');
-
-    for(int k = 0; k<4; k++){ //Print every suit
-        for(int i = 0; i<14; i++){ //Top part, print every card of the suit, using the correct color
-            printf("%s ---  ", colors[k]);
-        }
-        putchar('\n');
-        for(int i = 0; i<3; i++){ //Middle part
-            for(int j = 0; j<14; j++){ //The central part of the card
-                printf("| ");
-                if(i==1){
-                    deck[k][j] ? putchar('-') : printf("%c", symbolmatcher(j)); //When the middle is found, print - if already played; else print the number/symbol
+    for(int l = 0; l < packs; l++){
+        printf("Deck %d:\n", l+1);
+        for(int k = 0; k<4; k++){ //Print every suit
+            for(int i = 0; i<14; i++){ //Top part, print every card of the suit, using the correct color
+                printf("%s ---  ", colors[k]);
+            }
+            putchar('\n');
+            for(int i = 0; i<3; i++){ //Middle part
+                for(int j = 0; j<14; j++){ //The central part of the card
+                    printf("| ");
+                    if(i==1){
+                        deck[l][k][j] ? putchar('-') : printf("%c", symbolmatcher(j)); //When the middle is found, print - if already played; else print the number/symbol
+                    }
+                    else{
+                        putchar(' ');
+                    }
+                    printf(" | ");
                 }
-                else{
-                    putchar(' ');
-                }
-                printf(" | ");
+                putchar('\n');
+            }
+            for(int i = 0; i<14; i++){
+                printf(" ---  "); //Bottom part
             }
             putchar('\n');
         }
-        for(int i = 0; i<14; i++){
-            printf(" ---  "); //Bottom part
-        }
-        putchar('\n');
     }
-    
     putchar('\n');
     printf(RESET);
 }

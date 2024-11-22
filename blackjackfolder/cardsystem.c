@@ -3,11 +3,13 @@
 #include "printingsystem.h"
 #include "cardsystem.h"
 
-int card_check(int played_cards, int deck[][14]){
-    if(played_cards==56){
-        for(int i = 0 ; i<4; i++){
-            for(int j = 0; j<14; j++){
-                deck[i][j] = 0; //Resuffles cards
+int card_check(int played_cards, int deck[][4][14], int limitcards){
+    if(played_cards==limitcards){
+        for(int k = 0; k < limitcards / 56; k++){
+            for(int i = 0 ; i<4; i++){
+                for(int j = 0; j<14; j++){
+                    deck[k][i][j] = 0; //Resuffles cards
+                }
             }
         }
         printf("Resuffled cards!\n\n");
@@ -80,22 +82,23 @@ int sumcheck(int symbol, int sum, int *flag){
     }
 }
 
-void carddraw(int deck[][14], int hand[][20], int *limit, int *sum, int *played_cards, int *softflag){
-    int suit, rank;
+void carddraw(int deck[][4][14], int hand[][20], int *limit, int *sum, int *played_cards, int *softflag, int limitcards, int packs){
+    int suit, rank, whichdeck;
+    whichdeck = rand()%packs;
     suit = rand()%4; //Generates number 0-3
     rank = rand()%14; //Generates number 0-13
-    if(deck[suit][rank]==0){ //Works as a map. If we play a card, then we cross it off by saying its a one
-        deck[suit][rank]++; //Cross off
+    if(deck[whichdeck][suit][rank]==0){ //Works as a map. If we play a card, then we cross it off by saying its a one
+        deck[whichdeck][suit][rank]++; //Cross off
         hand[0][*limit] = suit; 
         hand[1][*limit] = rank; //Storing the card drawn to the corresponding hand
-        (*limit)++; //How many cards we need to draw
+        (*limit)++; //How many cards we need to draw on the scren
         (*sum) = sumcheck(rank, *sum, softflag); //Get the value of cards
         (*played_cards)++; 
-        (*played_cards) = card_check(*played_cards, deck); //See if we need to resuffle the cards; if we do, it resuffles them
+        (*played_cards) = card_check(*played_cards, deck, limitcards); //See if we need to resuffle the cards; if we do, it resuffles them
     }
 }
 
-int game(char name[], int deck[][14], int *played_cards, int double_down, int *flagdoubling){
+int game(char name[], int deck[][4][14], int *played_cards, int double_down, int *flagdoubling, int packs, int limitcards){
     int dealerhand[2][20] = {0}; //Stores cards drawn by dealer
     int playerhand[2][20] = {0}; //Stores cards drawn by player
     int dealerlimit = 0, playerlimit = 0; //How many cards we need to draw
@@ -103,11 +106,11 @@ int game(char name[], int deck[][14], int *played_cards, int double_down, int *f
     *flagdoubling = 0; //Haven't yet doubled
     
     do{ //Dealer
-        carddraw(deck, dealerhand, &dealerlimit, &dealersum, played_cards, &softflagdealer);
+        carddraw(deck, dealerhand, &dealerlimit, &dealersum, played_cards, &softflagdealer, limitcards, packs);
     } while(dealerlimit<=1); //Draws two cards
     
     do{ //Player
-        carddraw(deck, playerhand, &playerlimit, &playersum, played_cards, &softflagplayer);
+        carddraw(deck, playerhand, &playerlimit, &playersum, played_cards, &softflagplayer, limitcards, packs);
     } while(playerlimit<=1); //Draws two cards
     
 
@@ -148,7 +151,7 @@ int game(char name[], int deck[][14], int *played_cards, int double_down, int *f
         
         if(choice==1){
             do{ //Player
-                carddraw(deck, playerhand, &playerlimit, &playersum, played_cards, &softflagplayer);
+                carddraw(deck, playerhand, &playerlimit, &playersum, played_cards, &softflagplayer, limitcards, packs);
             } while(playerlimit<=cap); //Stops the loop when a card is drawn
             cap++; //Raise the cap if the player wants to search again
         }
@@ -156,7 +159,7 @@ int game(char name[], int deck[][14], int *played_cards, int double_down, int *f
             player_turn++; //Stand and go to dealer
         }
         else{
-            print_deck(deck); //Prints deck
+            print_deck(deck, packs); //Prints deck
         }
     }
 
@@ -177,7 +180,7 @@ int game(char name[], int deck[][14], int *played_cards, int double_down, int *f
         }
         else{
             do{ //Dealer
-                carddraw(deck, dealerhand, &dealerlimit, &dealersum, played_cards, &softflagdealer);
+                carddraw(deck, dealerhand, &dealerlimit, &dealersum, played_cards, &softflagdealer, limitcards, packs);
             } while(dealersum<17); //Draw until limit
 
             printf(BORE "-------------------------------------\n");

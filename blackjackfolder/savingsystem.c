@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <time.h>
 #include "savingsystem.h"
+#include "printingsystem.h"
 
 void first_time_set(){ //Sets up all the files if the game is for the first time opened
     FILE *fp;
@@ -35,51 +36,122 @@ void first_time_set(){ //Sets up all the files if the game is for the first time
     fclose(fp);
 }
 
-void new_game(char name[], long long *money, long long *seed, float *multiplier, int deck[][14]){
+void new_game(char name[], long long *money, long long *seed, float *multiplier, int *buffed_mult, int deck[][4][14], int *packs, int *limitcards, int *played_cards, int achievements_track[]){
     FILE *fp;
     fp = fopen("savegame.txt", "w"); //Open or overwrite all the data inside
 
+    int flag = 0;
+    for(int i = 0; i<6; i++){
+        if(achievements_track[i]==1){
+            flag = 1;
+            break;
+        }
+    }
+
     printf("Write your name: ");
-    scanf("%49s", name); 
+    scanf("%49s", name);
     *money = 1000;
-    fprintf(fp, "%s %lld ", name, *money); //Save player name, and give them a standard amount of money
-    
-    printf("Do you want to manually set a seed or have it random? Press 1 or 2: ");
-    long long answer;
+    *seed = time(NULL); //Generate random seed
+    *multiplier = 1.0;
+    *buffed_mult = 1; //Give standard multiplier
+    *packs = 1;
+    *limitcards = 56;
+    *played_cards = 0;
+
+    int choice;
     do{
-        scanf("%lld", &answer);
-    } while(answer!=1 && answer!=2); //Let them choose if the want a specific seed or "random"
+        printf("Choose gamemode:\n%s1. Classic Game\n%s2. Custom Game%s\n", GREEN, flag ? GREEN : RED, PLAYER);
+        scanf("%d", &choice);
+    } while(choice != 1 && (choice != 2 || flag == 0));
+
     
-    if(answer==1){
-        printf("Write your seed: ");
-        scanf("%lld", &answer);
-        *seed = answer;
-        fprintf(fp, "%lld ", *seed); //Save their specific seed
-    }
-    else{
-        *seed = time(NULL); //Generate random seed
-        fprintf(fp, "%lld ", *seed); //Save random seed
+    if(choice == 2){
+        while(choice!=5){
+            printf("Choices:\n%s1. Starting money\n%s2. Starting seed\n", (achievements_track[0] || achievements_track[1]) ? GREEN : RED, achievements_track[3] ? GREEN : RED);
+            printf("%s3. Starting multiplier\n%s4. Number of decks\n%s5. Start Game%s\n", achievements_track[2] ? GREEN : RED, achievements_track[4] ? GREEN : RED, GREEN, PLAYER);
+
+            scanf("%d", &choice);
+            if(choice==1 && (achievements_track[0] || achievements_track[1])){
+                if(achievements_track[1]){
+                    printf("Choose your starting money (up to 1m):%s ", YELLOW);
+                    scanf("%lld", money);
+                    while(*money>1000000 || *money<0){
+                        printf("%sWrong input, try again:%s ", RED, YELLOW);
+                        scanf("%lld", money);
+                    }
+                    printf(PLAYER "Registered!\n");
+                }
+                else{
+                    printf("Choose your starting money (up to 10k):%s ", YELLOW);
+                    scanf("%lld", money);
+                    while(*money>10000 || *money<0){
+                        printf("%sWrong input, try again:%s ", RED, YELLOW);
+                        scanf("%lld", money);
+                    }
+                    printf(PLAYER "Registered!\n");
+                }
+            }
+            else if(choice==1) printf("This choice isn't yet available!\n");
+
+            if(choice == 2 && achievements_track[3]){
+                printf(PLAYER "Write your seed (numbers only): ");
+                scanf("%lld", seed);
+                printf(PLAYER "Registered!\n");
+            }
+            else if(choice==2) printf("This choice isn't yet available!\n");
+
+            if(choice == 3 && achievements_track[2]){
+                printf("Do you want:\n1. Normal Multiplier\n2. Buffed Multiplier\n");
+                scanf("%d", buffed_mult);
+                while(*buffed_mult>2 || *buffed_mult<1){
+                    printf("%sWrong input, try again:%s ", RED, PLAYER);
+                    scanf("%d", buffed_mult);
+                }
+                printf(PLAYER "Registered!\n");
+            }
+            else if(choice==3) printf("This choice isn't yet available!\n");
+            
+            if(choice == 4 && achievements_track[4]){
+                printf("Choose how many decks you want there to be(up to 5): ");
+                scanf("%d", packs);
+                while(*packs>5 || *packs<1){
+                    printf("%sWrong input, try again:%s ", RED, PLAYER);
+                    scanf("%d", packs);
+                }
+                if(*packs==1) *limitcards = 56;
+                else if(*packs==2) *limitcards = 112;
+                else if(*packs==3) *limitcards = 168;
+                else if(*packs==4) *limitcards = 224;
+                else if(*packs==5) *limitcards = 280;
+                printf(PLAYER "Registered!\n");
+            }
+            else if(choice==4) printf("This choice isn't yet available!\n");
+
+        }
     }
 
-    *multiplier = 1.0; //Give standard multiplier
-    fprintf(fp, "%f ", *multiplier); //Save it
-
-    for(int i = 0; i<4; i++){
-        for(int j = 0; j<14; j++){
-            fprintf(fp, "%d ", 0); //Save the full deck
-            deck[i][j] = 0;
+    fprintf(fp, "%s %lld %lld %f %d %d %d %d ", name, *money, *seed, *multiplier, *buffed_mult, *packs, *limitcards, *played_cards);
+    for(int k = 0; k < *packs; k++){
+        for(int i = 0; i<4; i++){
+            for(int j = 0; j<14; j++){
+                fprintf(fp, "%d ", 0); //Save the full deck
+                deck[k][i][j] = 0;
+            }
         }
     }
     fclose(fp);
+
 }
 
-void load_game(char name[], long long *money, long long *seed, float *multiplier, int deck[][14]){
+void load_game(char name[], long long *money, long long *seed, float *multiplier, int *buffed_mult,int deck[][4][14], int *packs, int *limitcards, int *played_cards){
     FILE *fp;
     fp = fopen("savegame.txt", "r");
-    fscanf(fp, "%s %lld %lld %f", name, money, seed, multiplier); 
-    for(int i = 0; i<4; i++){
-        for(int j = 0; j<14; j++){
-            fscanf(fp, "%d", &deck[i][j]); //Load everything
+    fscanf(fp, "%s %lld %lld %f %d %d %d %d ", name, money, seed, multiplier, buffed_mult, packs, limitcards, played_cards); 
+    for(int k = 0; k < *packs; k++){
+        for(int i = 0; i<4; i++){
+            for(int j = 0; j<14; j++){
+                fscanf(fp, "%d", &deck[k][i][j]);
+            }
         }
     }
     fclose(fp);
@@ -161,15 +233,16 @@ void leaderboard_save_delete(long long money){
     fclose(fp);
 }
 
-void savegame(char name[], long long *money, long long *seed, float *multiplier, int deck[][14]){
+void savegame(char name[], long long *money, long long *seed, float *multiplier, int *buffed_mult,int deck[][4][14], int *packs, int *limitcards, int *played_cards){
     FILE *fp;
     fp = fopen("savegame.txt", "w");
 
-    fprintf(fp, "%s %lld ", name, *money);
-    fprintf(fp, "%lld %f ", *seed, *multiplier);
-    for(int i = 0; i<4; i++){
-        for(int j = 0; j<14; j++){
-            fprintf(fp, "%d ", deck[i][j]); //Save the data
+    fprintf(fp, "%s %lld %lld %f %d %d %d %d ", name, *money, *seed, *multiplier, *buffed_mult, *packs, *limitcards, *played_cards);
+    for(int k = 0; k < *packs; k++){
+        for(int i = 0; i<4; i++){
+            for(int j = 0; j<14; j++){
+                fprintf(fp, "%d ", deck[k][i][j]); //Save the full deck
+            }
         }
     }
     fclose(fp);
@@ -180,6 +253,16 @@ void save_stats(long long *overallplayed, long long *totalwins, long long *total
     fp = fopen("stats.txt", "w");
 
     fprintf(fp, "%lld %lld %lld %lld %lld %lld", *overallplayed, *totalwins, *totallost, *totalties, *moneygained, *moneylost); //Save the stats
+    fclose(fp);
+}
+
+void save_achievements(int achievements_track[]){
+    FILE *fp;
+    fp = fopen("achievements.txt", "w");
+
+    for(int i = 0; i<6; i++){
+        fprintf(fp, "%d ", achievements_track[i]);
+    }
     fclose(fp);
 }
 
