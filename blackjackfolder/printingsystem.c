@@ -95,12 +95,47 @@ void achievements(int achievements_track[]){
     printf("|              Achievements Page               |\n");
     printf("------------------------------------------------\n");
     printf("| %sGet 10k money%s                                |\n", achievements_track[0] ? GREEN : RED, PINK);
-    printf("| %sGet 100k money%s                               |\n", achievements_track[1] ? GREEN : RED, PINK);
+    printf("| %sGet 1m money%s                               |\n", achievements_track[1] ? GREEN : RED, PINK);
     printf("| %sGet a multiplier of x4.0 or better%s           |\n", achievements_track[2] ? GREEN : RED, PINK);
     printf("| %sPlay 1000 hands%s                              |\n", achievements_track[3] ? GREEN : RED, PINK);
     printf("| %sWin 1000 hands%s                               |\n", achievements_track[4] ? GREEN : RED, PINK);
     printf("| %sBreak the bank (and the game)%s                |\n", achievements_track[5] ? GREEN : RED, PINK);
     printf("------------------------------------------------%s\n", RESET);
+}
+
+void achieve_check(int achievements_track[], int *money, int *multiplier, int *overallplayed, int *totalwins){
+    if(achievements_track[0]==0 && *money >= 10000){
+        printf(YELLOW "Congrats on getting over 10k money!\n");
+        printf("New functionality for custom games unlocked! You can now choose a specific amount of money for the start, up to 10k!\n" PLAYER);
+        achievements_track[0]++;
+    }
+    if(achievements_track[1]==0 && *money >= 100000){
+        printf(YELLOW "Congrats on getting over 1m money!\n");
+        printf("New functionality for custom games unlocked! You can now choose a specific amount of money for the start, up to 1m!\n" PLAYER);
+        achievements_track[1]++;
+    }
+    if(achievements_track[2]==0 && *multiplier >= 4.0){
+        printf(YELLOW "Congrats on getting over x4.0 multiplier!\n");
+        printf("New functionality for custom games unlocked! You can now choose a more buffed version of multipliers!\n" PLAYER);
+        achievements_track[2]++;
+    }
+    if(achievements_track[3]==0 && *overallplayed >= 1000){
+        printf(YELLOW "Congrats on playing 1000 hands!\n");
+        printf("New functionality for custom games unlocked! You can now choose a specific seed to play on!\n" PLAYER);
+        achievements_track[3]++;
+    }
+    if(achievements_track[4]==0 && *totalwins >= 1000){
+        printf(YELLOW "Congrats on winning 1000 hands!\n");
+        printf("New functionality for custom games unlocked! You can now choose to play with more decks simultaneously, upping the difficulty!\n" PLAYER);
+        achievements_track[4]++;
+    }
+    if(achievements_track[5]==0 && *money <= 0){
+        printf(YELLOW "Congrats on.... breaking the game?\n");
+        printf("Either you messed with the savefile or you actually did that. Respect either way!\n" PLAYER);
+        achievements_track[5]++;
+        *money = 0;
+    }
+
 }
 
 void reset_prompt(){

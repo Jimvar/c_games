@@ -91,6 +91,7 @@ int main(){
             }
             savegame(name, &money, &seed, &multiplier ,deck); //Saves the current state of the game
             save_stats(&overallplayed, &totalwins, &totallost, &totalties, &moneygained, &moneylost); //Saves the stats
+            achieve_check(achievements_track, &money, &multiplier, &overallplayed, &totalwins);
 
             if(money==0){
                 printf(RED "You lost completely!\n" RESET);
