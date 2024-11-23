@@ -91,15 +91,15 @@ void stats(long long *overallplayed, long long *totalwins, long long *totallost,
     printf("------------------------------------------------%s\n", RESET);
 }
 
-void achievements(int achievements_track[]){
+void achievements(int achievements_track[], long long *overallplayed, long long *totalwins){
     printf("%s------------------------------------------------\n", PINK);
     printf("|              Achievements Page               |\n");
     printf("------------------------------------------------\n");
     printf("| %sGet 10k money%s                                |\n", achievements_track[0] ? GREEN : RED, PINK);
     printf("| %sGet 1m money%s                                 |\n", achievements_track[1] ? GREEN : RED, PINK);
     printf("| %sGet a multiplier of x4.0 or better%s           |\n", achievements_track[2] ? GREEN : RED, PINK);
-    printf("| %sPlay 1000 hands%s                              |\n", achievements_track[3] ? GREEN : RED, PINK);
-    printf("| %sWin 1000 hands%s                               |\n", achievements_track[4] ? GREEN : RED, PINK);
+    printf("| %sPlay %4lld/1000 hands%s                         |\n", achievements_track[3] ? GREEN : RED, *overallplayed, PINK);
+    printf("| %sWin %4lld/1000 hands%s                          |\n", achievements_track[4] ? GREEN : RED, *totalwins, PINK);
     printf("| %sBreak the bank (and the game)%s                |\n", achievements_track[5] ? GREEN : RED, PINK);
     printf("------------------------------------------------%s\n", RESET);
 }

@@ -33,7 +33,7 @@ int main(){
             continue; //Hops back to the main menu
         }
         else if(choice==5){
-            achievements(achievements_track);
+            achievements(achievements_track, &overallplayed, &totalwins);
             continue; //Hops back to the main menu
         }
         else if(choice==6){
