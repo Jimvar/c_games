@@ -58,7 +58,7 @@ int sumcheck(int symbol, int sum, int *flag){
     else if(symbol == 9) symbol = 10;
     else if(symbol == 10) symbol = 10;
     else if(symbol == 11) symbol = 10;
-    else if(symbol == 12) symbol = 10;;
+    else if(symbol == 12) symbol = 10;
 
     if(*flag==1){
         if(now==1){
