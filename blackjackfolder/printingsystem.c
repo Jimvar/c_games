@@ -77,7 +77,7 @@ void leaderboard(){
     fclose(fp);
 }
 
-void stats(long long *overallplayed, long long *totalwins, long long *totallost, long long *totalties, long long *moneygained, long long *moneylost) {
+void stats(long long *overallplayed, long long *totalwins, long long *totallost, long long *totalties, long long *moneygained, long long *moneylost, float *biggestmult) {
     printf("%s------------------------------------------------\n", PINK);
     printf("|                 Stats Page                   |\n");
     printf("------------------------------------------------\n");
@@ -87,6 +87,7 @@ void stats(long long *overallplayed, long long *totalwins, long long *totallost,
     printf("| Total ties:            %s%21lld%s |\n", BORE, *totalties, PINK);
     printf("| Money gained:          %s%21lld%s |\n", YELLOW, *moneygained, PINK);
     printf("| Money lost:            %s%21lld%s |\n", RED, *moneylost, PINK);
+    printf("| Biggest multiplier:    %s%21.1f%s |\n", RED, *biggestmult, PINK);
     printf("------------------------------------------------%s\n", RESET);
 }
 

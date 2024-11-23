@@ -22,7 +22,7 @@ extern const char *colors[];
 
 int startupscreen();
 void leaderboard();
-void stats(long long *overallplayed, long long *totalwins, long long *totallost, long long *totalties, long long *moneygained, long long *moneylost);
+void stats(long long *overallplayed, long long *totalwins, long long *totallost, long long *totalties, long long *moneygained, long long *moneylost, float *biggestmult);
 void achievements(int achievements_track[]);
 void achieve_check(int achievements_track[], long long *money, float *multiplier, long long *overallplayed, long long *totalwins);
 void reset_prompt();

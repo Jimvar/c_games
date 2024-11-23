@@ -11,11 +11,11 @@ int main(){
     long long money, seed; //They are made long long to increase range
     int choice, packs, limitcards, played_cards, deck[5][4][14], buffed_mult; //Choice is for the main menu, deck houses the cards
     long long overallplayed, totalwins, totallost, totalties, moneygained, moneylost; //Stats
-    float multiplier, mult_increase = 0.2, mult_double = 0.3; //Combo mechanic
+    float multiplier, mult_increase = 0.2, mult_double = 0.3, biggestmult; //Combo mechanic
     int achievements_track[6];
 
     while(1){
-        load_stats(&overallplayed, &totalwins, &totallost, &totalties, &moneygained, &moneylost); //Loading before entering the menu
+        load_stats(&overallplayed, &totalwins, &totallost, &totalties, &moneygained, &moneylost, &biggestmult); //Loading before entering the menu
         load_achievements(achievements_track);
         choice = startupscreen(); //Displays the main menu with the 5 choices and waits for response
         if(choice==1){
@@ -29,7 +29,7 @@ int main(){
             continue; //Hops back to the main menu
         }
         else if(choice==4){
-            stats(&overallplayed, &totalwins, &totallost, &totalties, &moneygained, &moneylost); //Displays the stats from all the playthroughs
+            stats(&overallplayed, &totalwins, &totallost, &totalties, &moneygained, &moneylost, &biggestmult); //Displays the stats from all the playthroughs
             continue; //Hops back to the main menu
         }
         else if(choice==5){
@@ -51,6 +51,10 @@ int main(){
             mult_increase = 0.5;
             mult_double = 0.8;
         }
+        else if(buffed_mult==1){
+            mult_increase = 0.2;
+            mult_double = 0.3;
+        }
 
         long long bet; //houses the bet, made long long since money is also long long
         int double_down, flagdoubling = 0; //Flag for if the can double down or not, and flag for if they did double down or not
@@ -58,7 +62,7 @@ int main(){
         while(again==1){
             
             do{
-                printf("%sChoose bet(You have %s%lld%s money, and multiplier %sx%.1f%s): ", PLAYER, YELLOW , money, PLAYER, RED, multiplier, PLAYER);
+                printf("%sChoose bet(You have %s%lld%s money, and multiplier %sx%.1f%s):%s ", PLAYER, YELLOW , money, PLAYER, RED, multiplier, PLAYER, YELLOW);
                 scanf("%lld", &bet);
             } while(bet>money || bet<=0); //Waits for input of player, and makes sure he doesn't give a false bet
             money -=bet; //The bet gets withdrawn from the balance
@@ -95,8 +99,13 @@ int main(){
                 money += bet; //Gives back the money withdrawn
                 totalties++; //Stat counter
             }
+
+            if(multiplier > biggestmult){
+                biggestmult = multiplier;
+            }
+
             savegame(name, &money, &seed, &multiplier, &buffed_mult, deck, &packs, &limitcards, &played_cards); //Saves the current state of the game
-            save_stats(&overallplayed, &totalwins, &totallost, &totalties, &moneygained, &moneylost); //Saves the stats
+            save_stats(&overallplayed, &totalwins, &totallost, &totalties, &moneygained, &moneylost, &biggestmult); //Saves the stats
             achieve_check(achievements_track, &money, &multiplier, &overallplayed, &totalwins);
             save_achievements(achievements_track);
 

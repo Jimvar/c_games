@@ -24,7 +24,7 @@ void first_time_set(){ //Sets up all the files if the game is for the first time
     fp = fopen("stats.txt", "r");
     if(fp==NULL){
         fp = fopen("stats.txt", "w");
-        fprintf(fp, "%d %d %d %d %d %d", 0, 0, 0, 0, 0, 0);
+        fprintf(fp, "%d %d %d %d %d %d %f", 0, 0, 0, 0, 0, 0, 1.0);
     }
     fclose(fp);
 
@@ -157,10 +157,10 @@ void load_game(char name[], long long *money, long long *seed, float *multiplier
     fclose(fp);
 }
 
-void load_stats(long long *overallplayed, long long *totalwins, long long *totallost, long long *totalties, long long *moneygained, long long *moneylost){
+void load_stats(long long *overallplayed, long long *totalwins, long long *totallost, long long *totalties, long long *moneygained, long long *moneylost, float *biggestmult){
     FILE *fp;
     fp = fopen("stats.txt", "r");
-    fscanf(fp, "%lld %lld %lld %lld %lld %lld", overallplayed, totalwins, totallost, totalties, moneygained, moneylost); //Load everything
+    fscanf(fp, "%lld %lld %lld %lld %lld %lld %f", overallplayed, totalwins, totallost, totalties, moneygained, moneylost, biggestmult); //Load everything
     fclose(fp);
 }
 
@@ -248,11 +248,11 @@ void savegame(char name[], long long *money, long long *seed, float *multiplier,
     fclose(fp);
 }
 
-void save_stats(long long *overallplayed, long long *totalwins, long long *totallost, long long *totalties, long long *moneygained, long long *moneylost){
+void save_stats(long long *overallplayed, long long *totalwins, long long *totallost, long long *totalties, long long *moneygained, long long *moneylost, float *biggestmult){
     FILE *fp;
     fp = fopen("stats.txt", "w");
 
-    fprintf(fp, "%lld %lld %lld %lld %lld %lld", *overallplayed, *totalwins, *totallost, *totalties, *moneygained, *moneylost); //Save the stats
+    fprintf(fp, "%lld %lld %lld %lld %lld %lld %f", *overallplayed, *totalwins, *totallost, *totalties, *moneygained, *moneylost, *biggestmult); //Save the stats
     fclose(fp);
 }
 
