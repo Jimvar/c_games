@@ -6,7 +6,7 @@
 #define CARDRED "\x1b[1;38;5;197m"
 #define CARDGREEN "\x1b[1;38;5;28m"
 #define CARDYELLOW  "\x1b[1;38;5;172m"
-#define CARDGRAY "\x1b[1;38;5;237m"
+#define CARDGRAY "\x1b[1;38;5;26m"
 #define BBLU  "\x1b[1;38;5;19m"
 #define BLACK "\x1b[1;90m"
 #define RESET "\x1b[0m"

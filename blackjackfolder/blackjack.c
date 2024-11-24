@@ -9,9 +9,9 @@ int main(){
     first_time_set(); //Makes sure every file is available; if not it makes them
     char name[50]; //Stores the name of the player
     long long money, seed; //They are made long long to increase range
-    int choice, packs, limitcards, played_cards, deck[5][4][14], buffed_mult; //Choice is for the main menu, deck houses the cards
+    int choice, packs, limitcards, played_cards, deck[5][4][14], buffed_mult, all_in; //Choice is for the main menu, deck houses the cards
     long long overallplayed, totalwins, totallost, totalties, moneygained, moneylost; //Stats
-    float multiplier, mult_increase = 0.2, mult_double = 0.3, biggestmult; //Combo mechanic
+    float multiplier, mult_increase = 0.2, mult_double = 0.3, all_in_mult = 0.8, biggestmult; //Combo mechanic
     int achievements_track[6];
 
     while(1){
@@ -67,6 +67,14 @@ int main(){
             } while(bet>money || bet<=0); //Waits for input of player, and makes sure he doesn't give a false bet
             money -=bet; //The bet gets withdrawn from the balance
             
+            if(money == 0){
+                all_in = 1;
+                printf("Brave for you to go all in, good luck!\n");
+            }
+            else{
+                all_in = 0;
+            }
+
             if(money>=bet){
                 double_down = 1; //They can double_down
             }
@@ -91,6 +99,10 @@ int main(){
                 printf("%sYou won %s%lld%s money and a boost to your multiplier!%s\n", GREEN , YELLOW, (long long)(bet*multiplier), GREEN, RESET);
                 money += 2*bet*multiplier; //Awards player with the amount withdrawn, the bet, plus what the multiplier gives
                 flagdoubling ? (multiplier += mult_double) : (multiplier += mult_increase); //If they doubled down, they get extra multiplier; else standard
+                if(all_in){
+                    printf("Since you went all in, you get an extra boost to your multiplier as a treat!\n");
+                    multiplier += all_in_mult;
+                }
                 totalwins++; //Stat counter
                 moneygained += bet; //Stat counter
             }

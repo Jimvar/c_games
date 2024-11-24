@@ -110,7 +110,7 @@ void achieve_check(int achievements_track[], long long *money, float *multiplier
         printf("New functionality for custom games unlocked! You can now choose a specific amount of money for the start, up to 10k!\n" PLAYER);
         achievements_track[0]++;
     }
-    if(achievements_track[1]==0 && *money >= 100000){
+    if(achievements_track[1]==0 && *money >= 1000000){
         printf(YELLOW "Congrats on getting over 1m money!\n");
         printf("New functionality for custom games unlocked! You can now choose a specific amount of money for the start, up to 1m!\n" PLAYER);
         achievements_track[1]++;
