@@ -3,6 +3,28 @@
 #include "printingsystem.h"
 #include "cardsystem.h"
 
+long long read_number() {
+    long long number = 0;
+
+    char c = getchar();
+
+    while (!(c >= '0' && c <= '9')) {
+        c = getchar();
+    }
+
+    while (c >= '0' && c <= '9') {
+        int digit = c - '0';
+        number = number * 10 + digit;
+        c = getchar();
+    }
+
+    if(c=='k' || c=='K') number *= 1000;
+    else if(c=='m' || c=='M') number *= 1000000;
+    else if(c=='b' || c=='B') number *= 1000000000;
+
+    return number;
+}
+
 int card_check(int played_cards, int deck[][4][14], int limitcards){
     if(played_cards==limitcards){
         for(int k = 0; k < limitcards / 56; k++){

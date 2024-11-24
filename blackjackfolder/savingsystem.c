@@ -2,6 +2,7 @@
 #include <time.h>
 #include "savingsystem.h"
 #include "printingsystem.h"
+#include "cardsystem.h"
 
 void first_time_set(){ //Sets up all the files if the game is for the first time opened
     FILE *fp;
@@ -74,19 +75,19 @@ void new_game(char name[], long long *money, long long *seed, float *multiplier,
             if(choice==1 && (achievements_track[0] || achievements_track[1])){
                 if(achievements_track[1]){
                     printf("Choose your starting money (up to 1m):%s ", YELLOW);
-                    scanf("%lld", money);
+                    money = read_number();
                     while(*money>1000000 || *money<0){
                         printf("%sWrong input, try again:%s ", RED, YELLOW);
-                        scanf("%lld", money);
+                        money = read_number();
                     }
                     printf(PLAYER "Registered!\n");
                 }
                 else{
                     printf("Choose your starting money (up to 10k):%s ", YELLOW);
-                    scanf("%lld", money);
+                    money = read_number();
                     while(*money>10000 || *money<0){
                         printf("%sWrong input, try again:%s ", RED, YELLOW);
-                        scanf("%lld", money);
+                        money = read_number();
                     }
                     printf(PLAYER "Registered!\n");
                 }

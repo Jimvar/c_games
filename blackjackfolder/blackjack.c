@@ -63,7 +63,7 @@ int main(){
             
             do{
                 printf("%sChoose bet(You have %s%lld%s money, and multiplier %sx%.1f%s):%s ", PLAYER, YELLOW , money, PLAYER, RED, multiplier, PLAYER, YELLOW);
-                scanf("%lld", &bet);
+                bet = read_number();
             } while(bet>money || bet<=0); //Waits for input of player, and makes sure he doesn't give a false bet
             money -=bet; //The bet gets withdrawn from the balance
             
@@ -100,7 +100,7 @@ int main(){
                 money += 2*bet*multiplier; //Awards player with the amount withdrawn, the bet, plus what the multiplier gives
                 flagdoubling ? (multiplier += mult_double) : (multiplier += mult_increase); //If they doubled down, they get extra multiplier; else standard
                 if(all_in){
-                    printf("Since you went all in, you get an extra boost to your multiplier as a treat!\n");
+                    printf(YELLOW "Since you went all in, you get an extra boost to your multiplier as a treat!\n" RESET);
                     multiplier += all_in_mult;
                 }
                 totalwins++; //Stat counter
