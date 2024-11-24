@@ -1,6 +1,7 @@
 #ifndef CARDSYSTEM_H
 #define CARDSYSTEM_H
 
+long long read_number();
 int card_check(int played_cards, int deck[][4][14], int limitcards);
 char symbolmatcher(int symbol);
 int sumcheck(int symbol, int sum, int *flag);
