@@ -58,63 +58,12 @@ int main(){
 
         long long bet; //houses the bet, made long long since money is also long long
         int double_down, flagdoubling = 0; //Flag for if the can double down or not, and flag for if they did double down or not
-
+        int win, loss, tie;
         while(again==1){
-            
-            do{
-                printf("%sChoose bet(You have %s%lld%s money, and multiplier %sx%.1f%s):%s ", PLAYER, YELLOW , money, PLAYER, RED, multiplier, PLAYER, YELLOW);
-                bet = read_number();
-            } while(bet>money || bet<=0); //Waits for input of player, and makes sure he doesn't give a false bet
-            money -=bet; //The bet gets withdrawn from the balance
-            
-            if(money == 0){
-                all_in = 1;
-                printf("Brave for you to go all in, good luck!\n");
-            }
-            else{
-                all_in = 0;
-            }
 
-            if(money>=bet){
-                double_down = 1; //They can double_down
-            }
-            else{
-                double_down = 0; //They can't double_down
-            }
+            win = loss = tie = 0;
 
-            won = game(name, deck, &played_cards, double_down, &flagdoubling, packs, limitcards); //Game is played
-            overallplayed++; //Stat counter
-            if(flagdoubling){ //They doubled
-                money -=bet; //The extra bet gets withdrawn from the balance
-                bet *= 2; //Doubles reward
-            }
-
-            if(won==0){
-                printf("%sYou lost %s%lld%s money and your x%.1f multiplier!%s\n", RED , YELLOW, bet, RED, multiplier, RESET); 
-                multiplier = 1.0; //Resets multiplier
-                totallost++; //Stat counter
-                moneylost += bet; //Stat counter
-            }
-            else if(won==1){
-                printf("%sYou won %s%lld%s money and a boost to your multiplier!%s\n", GREEN , YELLOW, (long long)(bet*multiplier), GREEN, RESET);
-                money += 2*bet*multiplier; //Awards player with the amount withdrawn, the bet, plus what the multiplier gives
-                flagdoubling ? (multiplier += mult_double) : (multiplier += mult_increase); //If they doubled down, they get extra multiplier; else standard
-                if(all_in){
-                    printf(YELLOW "Since you went all in, you get an extra boost to your multiplier as a treat!\n" RESET);
-                    multiplier += all_in_mult;
-                }
-                totalwins++; //Stat counter
-                moneygained += bet; //Stat counter
-            }
-            else if(won==2){
-                printf(GREEN "You tied!\n" RESET);
-                money += bet; //Gives back the money withdrawn
-                totalties++; //Stat counter
-            }
-
-            if(multiplier > biggestmult){
-                biggestmult = multiplier;
-            }
+            game(name, deck, &played_cards, packs, limitcards, &win, &loss, &tie, &money, &multiplier, &overallplayed, &totalwins, &totallost, &totalties, &moneygained, &moneylost, &biggestmult, &mult_increase, &mult_double, &all_in_mult); //Game is played
 
             savegame(name, &money, &seed, &multiplier, &buffed_mult, deck, &packs, &limitcards, &played_cards); //Saves the current state of the game
             save_stats(&overallplayed, &totalwins, &totallost, &totalties, &moneygained, &moneylost, &biggestmult); //Saves the stats
