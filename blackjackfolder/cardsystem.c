@@ -5,10 +5,12 @@
 
 long long read_number() {
     long long number = 0;
+    int negative_flag = 0;
 
     char c = getchar();
 
     while (!(c >= '0' && c <= '9')) {
+        if(c=='-') negative_flag = 1;
         c = getchar();
     }
 
@@ -21,6 +23,8 @@ long long read_number() {
     if(c=='k' || c=='K') number *= 1000;
     else if(c=='m' || c=='M') number *= 1000000;
     else if(c=='b' || c=='B') number *= 1000000000;
+
+    if(negative_flag) number *= -1;
 
     return number;
 }
