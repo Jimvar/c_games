@@ -4,6 +4,7 @@
 #define RED     "\x1b[1;31m"
 #define CYAN  "\x1b[1;36m"
 #define GREEN "\x1b[1;32m"
+#define SYSTEM "\x1b[0;38;5;69m"
 #define RESET   "\x1b[0m"
 
 void printboard(char board[7][6], char sym1, char sym2){
@@ -28,19 +29,16 @@ void printboard(char board[7][6], char sym1, char sym2){
 }
 
 
-int errorhandle(char input, int availiable[7]){
-
-
-
-    if(input<'1' || input>'7'){
-        if(input!='f'){
+int errorhandle(int input, int availiable[7]){
+    if(input<1 || input>7){
+        if(input!=12){
             printf("Wrong input!\n");
             return -1;
         }
         else return 1;
     }
     else{
-        if(availiable[input - '0' - 1] == -1){
+        if(availiable[input - 1] == -1){
             printf("You can't place there, collumn is full!\n");
             return -1;
         }
@@ -143,15 +141,15 @@ int wincheck(char board[7][6], int pos1, int pos2){
 int main(){
     char player1[50], player2[50];
     int wins1 = 0, wins2 = 0, turn = 0, won = 0, counter, bigturn = 0, check, pos1, pos2;
-    char input;
+    int input;
     int flag = 1;
 
-    printf("Welcome to Connect Four!\n");
+    printf(SYSTEM "Welcome to Connect Four!\n");
 
-    printf("Input player 1 name: ");
+    printf("Input player 1 name: %s", RED);
     scanf("%49s", player1);
 
-    printf("Input player 2 name: ");
+    printf(SYSTEM "Input player 2 name: %s", CYAN);
     scanf("%49s", player2);
 
 
@@ -161,7 +159,7 @@ int main(){
 
     while(flag==1){
         char board[7][6];
-        int availiable[7] = {0};
+        int columnAvailability[7] = {0};
 
         won = 0;
         counter = 0;
@@ -175,11 +173,11 @@ int main(){
         counter = 0;
 
         if(bigturn%2==0){
-            printf("%s goes first\n", player1);
+            printf("%s%s%s goes first\n", RED, player1, SYSTEM);
             turn = 0;
         }
         else{
-            printf("%s goes first\n", player2);
+            printf("%s%s%s goes first\n", CYAN, player2, SYSTEM);
             turn = 1;
         }
 
@@ -188,9 +186,9 @@ int main(){
 
             printboard(board, sym1, sym2);
             do{
-                printf("%s, choose an availiable number between 1-7, or press f if you want to forfeit): ", (turn==0) ? player1 : player2);
-                scanf(" %c", &input);
-                check = errorhandle(input, availiable);
+                printf("%s%s%s, choose an available number between 1-7, or press 12 if you want to forfeit: ", (turn==0) ? RED : CYAN ,(turn==0) ? player1 : player2, SYSTEM);
+                scanf(" %d", &input);
+                check = errorhandle(input, columnAvailability);
             } while(check==-1);
 
             if(check==1){
@@ -199,10 +197,10 @@ int main(){
             else{
                 for(int i = 0; i<7; i++){
                     for(int j = 0; j<6; j++){
-                        if(board[i][j] == ' ' && input - '0' - 1 == i){
+                        if(board[i][j] == ' ' && input - 1 == i){
                             board[i][j] = (turn==0) ? sym1 : sym2;
                             if(j+1==6){
-                                availiable[i] = -1;
+                                columnAvailability[i] = -1;
                             }
                             pos1 = i;
                             pos2 = j;
@@ -217,23 +215,24 @@ int main(){
             turn = 1 - turn;
             counter++;
         }
-
-
+        printboard(board, sym1, sym2);
         if(check==1){
             if((turn = 1 - turn) == 0){
-                printf("Congrats to %s for winning! They have a total of %d wins!\n", player1, ++wins1);
+                printf(SYSTEM "Congrats to %s%s%s for winning! They have a total of %d wins!\n", RED, player1, SYSTEM, ++wins1);
             }
             else{
-                printf("Congrats to %s for winning! They have a total of %d wins!\n", player2, ++wins2);
+                printf(SYSTEM"Congrats to %s%s%s for winning! They have a total of %d wins!\n", CYAN, player2, SYSTEM, ++wins2);
             }
         }
         else if(won==1){
             turn = 1 - turn;
-            printf("Congrats to %s for winnning! They have a total of %d wins!\n", (turn==0) ? player1 : player2, (turn==0) ? ++wins1 : ++wins2);
+            printf(SYSTEM "Congrats to %s%s%s for winnning! They have a total of %d wins!\n", (turn==0) ? RED : CYAN, (turn==0) ? player1 : player2, SYSTEM, (turn==0) ? ++wins1 : ++wins2);
         }
         else{
-            printf("It's a draw!\n");
+            printf(SYSTEM "It's a draw!\n");
         }
+
+        printf("The current score is %s%s:%d%s-%s%d:%s%s\n", RED, player1, wins1, SYSTEM, CYAN, wins2, player2, SYSTEM);
 
         bigturn++;
         flag = 0;
