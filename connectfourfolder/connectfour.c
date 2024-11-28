@@ -157,6 +157,25 @@ int main(){
     int input;
     int flag = 1;
 
+    printf("\n");
+    printf("%s        CCCCCCCCCCCCC                                                                                                      tttt               %sFFFFFFFFFFFFFFFFFFFFFF                                                   \n", RED, CYAN);
+    printf("%s     CCC::::::::::::C                                                                                                   ttt:::t               %sF::::::::::::::::::::F                                                   \n", RED, CYAN);
+    printf("%s   CC:::::::::::::::C                                                                                                   t:::::t               %sF::::::::::::::::::::F                                                   \n", RED, CYAN);
+    printf("%s  C:::::CCCCCCCC::::C                                                                                                   t:::::t               %sFF::::::FFFFFFFFF::::F                                                   \n", RED, CYAN);
+    printf("%s C:::::C       CCCCCC   ooooooooooo   nnnn  nnnnnnnn    nnnn  nnnnnnnn        eeeeeeeeeeee        ccccccccccccccccttttttt:::::ttttttt         %s  F:::::F       FFFFFFooooooooooo   uuuuuu    uuuuuu rrrrr   rrrrrrrrr   \n", RED, CYAN);
+    printf("%sC:::::C               oo:::::::::::oo n:::nn::::::::nn  n:::nn::::::::nn    ee::::::::::::ee    cc:::::::::::::::ct:::::::::::::::::t         %s  F:::::F           oo:::::::::::oo u::::u    u::::u r::::rrr:::::::::r  \n", RED, CYAN);
+    printf("%sC:::::C              o:::::::::::::::on::::::::::::::nn n::::::::::::::nn  e::::::eeeee:::::ee c:::::::::::::::::ct:::::::::::::::::t         %s  F::::::FFFFFFFFFFo:::::::::::::::ou::::u    u::::u r:::::::::::::::::r \n", RED, CYAN);
+    printf("%sC:::::C              o:::::ooooo:::::onn:::::::::::::::nnn:::::::::::::::ne::::::e     e:::::ec:::::::cccccc:::::ctttttt:::::::tttttt         %s  F:::::::::::::::Fo:::::ooooo:::::ou::::u    u::::u rr::::::rrrrr::::::r\n", RED, CYAN);
+    printf("%sC:::::C              o::::o     o::::o  n:::::nnnn:::::n  n:::::nnnn:::::ne:::::::eeeee::::::ec::::::c     ccccccc      t:::::t               %s  F:::::::::::::::Fo::::o     o::::ou::::u    u::::u  r:::::r     r:::::r\n", RED, CYAN);
+    printf("%sC:::::C              o::::o     o::::o  n::::n    n::::n  n::::n    n::::ne:::::::::::::::::e c:::::c                   t:::::t               %s  F::::::FFFFFFFFFFo::::o     o::::ou::::u    u::::u  r:::::r     rrrrrrr\n", RED, CYAN);
+    printf("%sC:::::C              o::::o     o::::o  n::::n    n::::n  n::::n    n::::ne::::::eeeeeeeeeee  c:::::c                   t:::::t               %s  F:::::F          o::::o     o::::ou::::u    u::::u  r:::::r            \n", RED, CYAN);
+    printf("%s C:::::C       CCCCCCo::::o     o::::o  n::::n    n::::n  n::::n    n::::ne:::::::e           c::::::c     ccccccc      t:::::t    tttttt     %s  F:::::F          o::::o     o::::ou:::::uuuu:::::u  r:::::r            \n", RED, CYAN);
+    printf("%s  C:::::CCCCCCCC::::Co:::::ooooo:::::o  n::::n    n::::n  n::::n    n::::ne::::::::e          c:::::::cccccc:::::c      t::::::tttt:::::t     %sFF:::::::FF        o:::::ooooo:::::ou:::::::::::::::uur:::::r            \n", RED, CYAN);
+    printf("%s   CC:::::::::::::::Co:::::::::::::::o  n::::n    n::::n  n::::n    n::::n e::::::::eeeeeeee   c:::::::::::::::::c      tt::::::::::::::t     %sF::::::::FF        o:::::::::::::::o u:::::::::::::::ur:::::r            \n", RED, CYAN);
+    printf("%s     CCC::::::::::::C oo:::::::::::oo   n::::n    n::::n  n::::n    n::::n  ee:::::::::::::e    cc:::::::::::::::c        tt:::::::::::tt     %sF::::::::FF         oo:::::::::::oo   uu::::::::uu:::ur:::::r            \n", RED, CYAN);
+    printf("%s        CCCCCCCCCCCCC   ooooooooooo     nnnnnn    nnnnnn  nnnnnn    nnnnnn    eeeeeeeeeeeeee      cccccccccccccccc          ttttttttttt       %sFFFFFFFFFFF           ooooooooooo       uuuuuuuu  uuuurrrrrrr            \n", RED, CYAN);
+    printf("\n");
+
     printf(SYSTEM "Welcome to Connect Four!\n");
 
     printf("Input player 1 name: %s", RED);
