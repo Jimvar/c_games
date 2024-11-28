@@ -61,6 +61,7 @@ int main(){
 
         while(again==1){
             
+            clear_screen();
             do{
                 printf("%sChoose bet(You have %s%lld%s money, and multiplier %sx%.1f%s):%s ", PLAYER, YELLOW , money, PLAYER, RED, multiplier, PLAYER, YELLOW);
                 bet = read_number();

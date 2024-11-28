@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <ctype.h>
+#include <stdlib.h>
 // C
 #define RED     "\x1b[1;31m"
 #define CYAN  "\x1b[1;36m"
@@ -137,6 +138,18 @@ int wincheck(char board[7][6], int pos1, int pos2){
 
 }
 
+#ifdef _WIN32
+    #define clear_screen() system("cls")
+#else
+    #include <unistd.h>
+    void clear_screen() {
+        if (isatty(fileno(stdout))) {
+            printf("\033[H\033[J");  // ANSI escape codes
+        } else {
+            printf("Output is not a terminal. Screen clear skipped.\n");
+        }
+    }
+#endif
 
 int main(){
     char player1[50], player2[50];
@@ -232,13 +245,14 @@ int main(){
             printf(SYSTEM "It's a draw!\n");
         }
 
-        printf("The current score is %s%s:%d%s-%s%d:%s%s\n", RED, player1, wins1, SYSTEM, CYAN, wins2, player2, SYSTEM);
+        printf("The current score is %s%s:%d%s - %s%d:%s%s\n", RED, player1, wins1, SYSTEM, CYAN, wins2, player2, SYSTEM);
 
         bigturn++;
         flag = 0;
 
         printf("If you want to play again, enter 1: ");
         scanf("%d", &flag);
+        clear_screen();
     }
 
 
