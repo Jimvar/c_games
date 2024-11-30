@@ -138,19 +138,6 @@ int wincheck(char board[7][6], int pos1, int pos2){
 
 }
 
-#ifdef _WIN32
-    #define clear_screen() system("cls")
-#else
-    #include <unistd.h>
-    void clear_screen() {
-        if (isatty(fileno(stdout))) {
-            printf("\033[H\033[J");  // ANSI escape codes
-        } else {
-            printf("Output is not a terminal. Screen clear skipped.\n");
-        }
-    }
-#endif
-
 int main(){
     char player1[50], player2[50];
     int wins1 = 0, wins2 = 0, turn = 0, won = 0, counter, bigturn = 0, check, pos1, pos2;
@@ -271,7 +258,7 @@ int main(){
 
         printf("If you want to play again, enter 1: ");
         scanf("%d", &flag);
-        clear_screen();
+        printf("\033[H\033[J");
     }
 
 

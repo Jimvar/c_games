@@ -28,7 +28,5 @@ void achieve_check(int achievements_track[], long long *money, float *multiplier
 void reset_prompt();
 void print_deck(int deck[][4][14], int packs);
 void draw_cards(int how_many, int hand[][20]);
-void clear_screen();
-
 
 #endif 

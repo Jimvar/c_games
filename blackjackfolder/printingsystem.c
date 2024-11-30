@@ -213,16 +213,3 @@ void draw_cards(int how_many, int hand[][20]){
     printf(RESET "\n");
 
 }
-
-#ifdef _WIN32
-    #define clear_screen() system("cls")
-#else
-    #include <unistd.h>
-    void clear_screen() {
-        if (isatty(fileno(stdout))) {
-            printf("\033[H\033[J");  // ANSI escape codes
-        } else {
-            printf("Output is not a terminal. Screen clear skipped.\n");
-        }
-    }
-#endif
