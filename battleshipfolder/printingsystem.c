@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <string.h>
 #include "printingsystem.h"
 
 int startupscreen() {
@@ -11,6 +12,7 @@ int startupscreen() {
     const int wave_width = 76; // Width matching the battleship logo
     int wave_cycle = 0; // Used to animate the wave movement
     int counter = 0; //For when the loop should stop
+    char choice;
 
     while (counter++ <= 60) {
         printf(CLEARSCREEN); // Clear the screen
@@ -67,5 +69,25 @@ int startupscreen() {
 
     }
 
-    return 0; // Exit the function
+    printf(SYSTEM "Welcome to Battleship!\n");
+    printf("Choose gamemode:\n1. VS Player\n2. VS AI\n");
+
+    scanf("%c", &choice);
+    while(choice!='1'){
+        printf(RED "Invalid choice! Enter again: " SYSTEM);
+        while(getchar()!='\n');
+        scanf("%c", &choice);
+    }
+
+    return(choice - '0'); // Exit the function
+}
+
+void getname(char player[], int which, int size){
+    printf(SYSTEM "Input player %d name: %s", which, PLAYERS);
+    fgets(player, size, stdin);
+    // Remove the newline character if present
+    size_t len = strlen(player);
+    if (len > 0 && player[len - 1] == '\n') {
+        player[len - 1] = '\0';
+    }
 }

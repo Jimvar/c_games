@@ -10,7 +10,10 @@
 #define BRIGHTBLUE "\033[38;5;45m"
 #define RESET "\x1b[0m"
 #define SYSTEM "\x1b[0;38;5;69m"
+#define PLAYERS "\033[38;5;214m"
+#define RED   "\x1b[1;31m"
 
 int startupscreen();
+void getname(char player[], int which, int size);
 
 #endif 
