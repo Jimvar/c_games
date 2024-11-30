@@ -139,8 +139,8 @@ void display_board(int map[][10][10], int bigturn, int x_pos, int y_pos, int siz
             }
             
             if(map[bigturn][i][j]==1) printf(RED " X" RESET);
-            else if (ship_to_place) printf(GREEN " O" RESET);
             else if(map[bigturn][i][j] == -1) printf(WHITE " X" RESET);
+            else if (ship_to_place) printf(GREEN " O" RESET);
             else printf(LIGHTBLUE " ~" RESET);
 
         }
@@ -333,13 +333,17 @@ int gameplay(char player1[], char player2[], int bigturn, int ship_placement[][1
             }
             else if(c == '\n'){
                 // Attempt to bomb the ship
-                if(ship_placement[bigturn][x_pos][y_pos]==1){
-                    ship_placement[bigturn][x_pos][y_pos]++;
+                if(ship_placement[1 - bigturn][x_pos][y_pos]==1){
+                    ship_placement[1 - bigturn][x_pos][y_pos]++;
                     ship_bomb[bigturn][x_pos][y_pos]++;
                     ships_hit[bigturn]++;
                     printf(GREEN "You hit them!\n" RESET);
                     usleep(1000000);
-                } 
+                }
+                else if(ship_bomb[bigturn][x_pos][y_pos]==-1 || ship_bomb[bigturn][x_pos][y_pos]==1){
+                    printf(RED "You have already shot there!\n" RESET);
+                    usleep(1000000);
+                }
                 else{
                     ship_bomb[bigturn][x_pos][y_pos]--;
                     printf(RED "You didn't hit them!\n" RESET);
@@ -352,6 +356,7 @@ int gameplay(char player1[], char player2[], int bigturn, int ship_placement[][1
         if(ships_hit[bigturn]==17){
             display_board(ship_bomb, bigturn, x_pos, y_pos, 1, 0);
             usleep(1000000);
+            disable_raw_mode(&orig_termios);
             if(bigturn==0){
                 return 1;
             }
@@ -362,6 +367,5 @@ int gameplay(char player1[], char player2[], int bigturn, int ship_placement[][1
     }
 
     printf(CLEARSCREEN);
-    disable_raw_mode(&orig_termios);
     return 0;
 }
