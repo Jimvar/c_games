@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <unistd.h> // For usleep()
 #include "printingsystem.h"
 
 int main() {
@@ -8,10 +7,14 @@ int main() {
 
     if(choice==1){
         char player1[50], player2[50];
+        int ship_placement[2][10][10] = {0};
+        int bigturn = 0;
 
         while(getchar()!='\n');
         getname(player1, 1, sizeof(player1));
         getname(player2, 2, sizeof(player2));
+
+        ship_setup(player1, player2, bigturn, ship_placement);
     }
 
     return 0;
