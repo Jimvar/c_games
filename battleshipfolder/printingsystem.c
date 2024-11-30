@@ -27,7 +27,7 @@ void enable_raw_mode(struct termios *orig_termios) {
 
 int startupscreen() {
     const int max_offset = 15; // Maximum horizontal movement for ships
-    const int frame_delay = 150000; // Frame delay in microseconds (150ms)
+    const int frame_delay = 15000; // Frame delay in microseconds (150ms)
     int direction = 1; // Direction of ship movement (1 = right, -1 = left)
     int offset = 0; // Offset for the first ship
     const int wave_width = 76; // Width matching the battleship logo
@@ -113,12 +113,11 @@ void getname(char player[], int which, int size){
     }
 }
 
-void display_board(int ship_placement[][10][10], int bigturn, int x_pos, int y_pos, int size, int looking_side){
+void display_board(int map[][10][10], int bigturn, int x_pos, int y_pos, int size, int looking_side){
     printf(BOARD "    ---------------------\n" RESET);
     for (int j = 9; j >= 0; j--) {
         printf(BOARD "%2d |%s", j, RESET);
         for (int i = 0; i < 10; i++) {
-            int ship_here = ship_placement[bigturn][i][j];
             int ship_to_place = 0;
 
             // Check if the ship is at the current position
@@ -138,14 +137,12 @@ void display_board(int ship_placement[][10][10], int bigturn, int x_pos, int y_p
                     break;
                 }
             }
+            
+            if(map[bigturn][i][j]==1) printf(RED " X" RESET);
+            else if (ship_to_place) printf(GREEN " O" RESET);
+            else if(map[bigturn][i][j] == -1) printf(WHITE " X" RESET);
+            else printf(LIGHTBLUE " ~" RESET);
 
-            if (ship_here) {
-                printf(RED " X" RESET);
-            } else if (ship_to_place) {
-                printf(GREEN " O" RESET);
-            } else {
-                printf("%s ~%s", (i%2) ? LIGHTBLUE : DARKBLUE, RESET);
-            }
         }
         printf(BOARD " |\n" RESET);
     }
@@ -160,13 +157,14 @@ void ship_setup(char player1[], char player2[], int bigturn, int ship_placement[
 
     for (int k = 0; k < 2; k++) {
         int size;
-        int x_pos = 0, y_pos = 0, looking_side = 0; // Looking side: 0 right, 1 up, 2 left, 3 down
+        int x_pos, y_pos, looking_side; // Looking side: 0 right, 1 up, 2 left, 3 down
 
         printf(CLEARSCREEN);
         printf(PLAYERS "%s%s, make sure the opponent isn't watching the screen while you are making the placements\n" RESET, (bigturn == 0) ? player1 : player2, SYSTEM);
         usleep(1500000);
 
-        for (int l = 5; l > 0; l--) {
+        for (int l = 5; l > 0; l--){
+            x_pos = 0, y_pos = 0, looking_side = 0;
             int done = 0;
 
             // Determine ship size
@@ -274,6 +272,96 @@ void ship_setup(char player1[], char player2[], int bigturn, int ship_placement[
         // Switch player
         bigturn = 1 - bigturn;
     }
-
+    printf(CLEARSCREEN);
     disable_raw_mode(&orig_termios);
+}
+
+int gameplay(char player1[], char player2[], int bigturn, int ship_placement[][10][10]){
+    struct termios orig_termios;
+    enable_raw_mode(&orig_termios);
+
+    int ship_bomb[2][10][10] = {0};
+    int x_pos, y_pos;
+    int ships_hit[2] = {0};
+
+    while(1){
+        x_pos = 0, y_pos = 0;
+        int oldbigturn = bigturn;
+        printf(PLAYERS "%s%s, it is your turn to play!\n", (bigturn==0) ? player1 : player2, SYSTEM);
+        usleep(1000000);
+
+        while(oldbigturn == bigturn && ships_hit[bigturn] < 17){
+            printf(CLEARSCREEN);
+            display_board(ship_bomb, bigturn, x_pos, y_pos, 1, 0);
+
+            printf(PLAYERS "%s%s, use arrow keys to move and Enter to bomb the square.\n", (bigturn==0) ? player1 : player2, SYSTEM);
+
+            char c = getchar();
+            if(c == '\033'){ // Escape character
+                // Read the next two characters for arrow keys
+                char seq[2];
+                seq[0] = getchar();
+                seq[1] = getchar();
+
+                int new_x = x_pos, new_y = y_pos;
+
+                if(seq[0] == '['){
+                    switch (seq[1]){
+                        case 'A':
+                            // Up arrow
+                            new_y += 1;
+                            break;
+                        case 'B':
+                            // Down arrow
+                            new_y -= 1;
+                            break;
+                        case 'C':
+                            // Right arrow
+                            new_x += 1;
+                            break;
+                        case 'D':
+                            // Left arrow
+                            new_x -= 1;
+                            break;
+                    }
+                }
+                // Check if new position is within bounds
+                if(new_x >= 0 && new_x < 10 && new_y >= 0 && new_y < 10){
+                    x_pos = new_x;
+                    y_pos = new_y;
+                }
+            }
+            else if(c == '\n'){
+                // Attempt to bomb the ship
+                if(ship_placement[bigturn][x_pos][y_pos]==1){
+                    ship_placement[bigturn][x_pos][y_pos]++;
+                    ship_bomb[bigturn][x_pos][y_pos]++;
+                    ships_hit[bigturn]++;
+                    printf(GREEN "You hit them!\n" RESET);
+                    usleep(1000000);
+                } 
+                else{
+                    ship_bomb[bigturn][x_pos][y_pos]--;
+                    printf(RED "You didn't hit them!\n" RESET);
+                    usleep(1000000);
+                    bigturn = 1 - bigturn;
+                }
+            }
+        }
+
+        if(ships_hit[bigturn]==17){
+            display_board(ship_bomb, bigturn, x_pos, y_pos, 1, 0);
+            usleep(1000000);
+            if(bigturn==0){
+                return 1;
+            }
+            else{
+                return 2;
+            }
+        }
+    }
+
+    printf(CLEARSCREEN);
+    disable_raw_mode(&orig_termios);
+    return 0;
 }

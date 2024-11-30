@@ -17,6 +17,8 @@
 
 int startupscreen();
 void getname(char player[], int which, int size);
+void display_board(int ship_placement[][10][10], int bigturn, int x_pos, int y_pos, int size, int looking_side);
 void ship_setup(char player1[], char player2[], int bigturn, int ship_placement[][10][10]);
+int gameplay(char player1[], char player2[], int bigturn, int ship_placement[][10][10]);
 
 #endif 
