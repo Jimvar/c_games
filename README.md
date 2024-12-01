@@ -9,7 +9,6 @@ A collection of classic console games implemented in C. This repository includes
 - [How to Play](#how-to-play)
 - [How to Contribute](#how-to-contribute)
 - [Code Structure](#code-structure)
-- [Setup Instructions](#setup-instructions)
 
 ## Introduction
 This repository is a collection of simple console games implemented in C. Each game is designed to run in the terminal with a focus on clean, organized code and basic game mechanics. The project demonstrates how to structure small games, manage state, handle user input, and output results to the terminal.
@@ -18,10 +17,13 @@ This repository is a collection of simple console games implemented in C. Each g
 1. **Blackjack**:  
    A feature-rich implementation of the classic card game, including multiple decks, dynamic leaderboards, and data persistence. It allows players to choose game modes, track their progress, and interact with the game via a simple terminal interface.
 
-2. **Connect Four**:  
+2. **Battleship**:
+   This is a text-based implementation of the classic Battleship game, where players strategically place ships on a grid and attempt to sink the opponent's fleet. The game is played in turns, with each player choosing coordinates to target the enemy's ships. The goal is to be the first to sink all of the opponent's ships. This game is designed for two players, with a simple, clean user interface that is played in the terminal. The code structure is modular, allowing for easy updates or customizations.
+
+3. **Connect Four**:  
    A two-player strategy game where players aim to connect four discs in a row. The implementation focuses on game mechanics, handling user input, and checking for winning conditions.
 
-3. **Tic Tac Toe**:  
+4. **Tic Tac Toe**:  
    A simple, classic two-player game where players take turns marking spaces on a 3x3 grid, with the goal of aligning three marks in a row.
 
 ## Features
@@ -39,6 +41,7 @@ This repository is a collection of simple console games implemented in C. Each g
 2. Navigate to the game folder:
    ```bash
    cd c_games/blackjackfolder   # For Blackjack game
+   cd c_games/battleshipfolder  # For Battleship game
    cd c_games/connectfourfolder # For Connect Four game
    cd c_games/tictactoefolder   # For Tic Tac Toe game
    ```
@@ -46,6 +49,7 @@ This repository is a collection of simple console games implemented in C. Each g
 3. Compile the game using a C compiler:
    ```bash
    gcc blackjack.c cardsystem.c printingsystem.c savingsystem.c -o blackjack
+   gcc battleship.c printingsystem.c soundsystem.c -Wall -I/usr/include/SDL2 -lSDL2 -lSDL2_mixer -o battleship
    gcc connectfour.c -o connectfour
    gcc tictactoe.c -o tictactoe
    ```
@@ -53,6 +57,7 @@ This repository is a collection of simple console games implemented in C. Each g
 4. Run the compiled executable:
    ```bash
    ./blackjack   # For Blackjack game
+   ./battleship  # For Battleship game
    ./connectfour # For Connect Four game
    ./tictactoe   # For Tic Tac Toe game
    ```
@@ -77,28 +82,15 @@ The repository is organized into separate folders for each game, with the follow
   - `printingsystem.c`/`printingsystem.h`: Game interface and output.
   - `savingsystem.c`/`savingsystem.h`: Saving and loading game state.
 
+- **Battleship**:
+  - `battleship.c`: Main game logic for Battleship.
+  - `printingsystem.c`: Game interface and output.
+  - `soundsystem.c`: Handles sound init, sound play and sound cleanup.
+
 - **Connect Four**:
   - `connectfour.c`: Main game logic for Connect Four.
 
 - **Tic Tac Toe**:
   - `tictactoe.c`: Main game logic for Tic Tac Toe.
-
-## Setup Instructions
-To set up and run the games, ensure you have a C compiler (e.g., `gcc`) installed on your system. Follow these steps:
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/c_games.git
-   ```
-   
-2. Navigate to the game folder and compile the code:
-   ```bash
-   cd c_games/blackjackfolder   # or any other game folder
-   gcc blackjack.c cardsystem.c printingsystem.c savingsystem.c -o blackjack
-   ```
-
-3. Run the executable:
-   ```bash
-   ./blackjack   # Replace with the relevant game name
-   ```
 
 ---
