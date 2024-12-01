@@ -4,6 +4,7 @@
 #include <string.h>
 #include <termios.h>
 #include "printingsystem.h"
+#include "soundsystem.h"
 
 // Function to disable raw mode
 void disable_raw_mode(struct termios *orig_termios) {
@@ -25,6 +26,42 @@ void enable_raw_mode(struct termios *orig_termios) {
     tcsetattr(STDIN_FILENO, TCSANOW, &raw);
 }
 
+void pos_calc(int *x_pos, int *y_pos){
+    // Read the next two characters for arrow keys
+    char seq[2];
+    seq[0] = getchar();
+    seq[1] = getchar();
+
+    int new_x = *x_pos, new_y = *y_pos;
+
+    if(seq[0] == '['){
+        switch (seq[1]){
+            case 'A':
+                // Up arrow
+                new_y += 1;
+                break;
+            case 'B':
+                // Down arrow
+                new_y -= 1;
+                break;
+            case 'C':
+                // Right arrow
+                new_x += 1;
+                break;
+            case 'D':
+                // Left arrow
+                new_x -= 1;
+                break;
+        }
+
+        // Check if new position is within bounds
+        if(new_x >= 0 && new_x < 10 && new_y >= 0 && new_y < 10){
+            *x_pos = new_x;
+            *y_pos = new_y;
+        }
+    }
+}
+
 int startupscreen() {
     const int max_offset = 15; // Maximum horizontal movement for ships
     const int frame_delay = 150000; // Frame delay in microseconds (150ms)
@@ -32,7 +69,7 @@ int startupscreen() {
     int offset = 0; // Offset for the first ship
     const int wave_width = 76; // Width matching the battleship logo
     int wave_cycle = 0; // Used to animate the wave movement
-    int counter = 0; //For when the loop should stop
+    int counter = -1; //For when the loop should stop
     char choice;
 
     while (counter++ <= 60) {
@@ -57,6 +94,13 @@ int startupscreen() {
 
         for (int i = 0; i < offset; i++) printf(" ");
         printf("\033[1;33m|________________> > >_____/    |_____> > >________________/\033[0m\n");
+
+        if(counter%20 == 0){
+            play_explosion_sound();
+        }
+        else if(counter%10 == 0){
+            play_bloop_sound();
+        }
 
         // Wave animation
         for (int i = 0; i < 2; i++) {
@@ -183,39 +227,7 @@ void ship_setup(char player1[], char player2[], int bigturn, int ship_placement[
                     looking_side = (looking_side + 1) % 4;
                 }
                 else if(c == '\033'){ // Escape character
-                    // Read the next two characters for arrow keys
-                    char seq[2];
-                    seq[0] = getchar();
-                    seq[1] = getchar();
-
-                    int new_x = x_pos, new_y = y_pos;
-
-                    if(seq[0] == '['){
-                        switch (seq[1]){
-                            case 'A':
-                                // Up arrow
-                                new_y += 1;
-                                break;
-                            case 'B':
-                                // Down arrow
-                                new_y -= 1;
-                                break;
-                            case 'C':
-                                // Right arrow
-                                new_x += 1;
-                                break;
-                            case 'D':
-                                // Left arrow
-                                new_x -= 1;
-                                break;
-                        }
-
-                        // Check if new position is within bounds
-                        if(new_x >= 0 && new_x < 10 && new_y >= 0 && new_y < 10){
-                            x_pos = new_x;
-                            y_pos = new_y;
-                        }
-                    }
+                    pos_calc(&x_pos, &y_pos);
                 } 
                 else if(c == '\n'){
                     // Attempt to place the ship
@@ -293,38 +305,7 @@ int gameplay(char player1[], char player2[], int bigturn, int ship_placement[][1
 
             char c = getchar();
             if(c == '\033'){ // Escape character
-                // Read the next two characters for arrow keys
-                char seq[2];
-                seq[0] = getchar();
-                seq[1] = getchar();
-
-                int new_x = x_pos, new_y = y_pos;
-
-                if(seq[0] == '['){
-                    switch (seq[1]){
-                        case 'A':
-                            // Up arrow
-                            new_y += 1;
-                            break;
-                        case 'B':
-                            // Down arrow
-                            new_y -= 1;
-                            break;
-                        case 'C':
-                            // Right arrow
-                            new_x += 1;
-                            break;
-                        case 'D':
-                            // Left arrow
-                            new_x -= 1;
-                            break;
-                    }
-                }
-                // Check if new position is within bounds
-                if(new_x >= 0 && new_x < 10 && new_y >= 0 && new_y < 10){
-                    x_pos = new_x;
-                    y_pos = new_y;
-                }
+                pos_calc(&x_pos, &y_pos);
             }
             else if(c == '\n'){
                 // Attempt to bomb the ship
@@ -333,6 +314,7 @@ int gameplay(char player1[], char player2[], int bigturn, int ship_placement[][1
                     ship_bomb[bigturn][x_pos][y_pos]++;
                     ships_hit[bigturn]++;
                     printf(GREEN "You hit them!\n" RESET);
+                    play_explosion_sound();
                     usleep(1000000);
                 }
                 else if(ship_bomb[bigturn][x_pos][y_pos]==-1 || ship_bomb[bigturn][x_pos][y_pos]==1){
@@ -342,6 +324,7 @@ int gameplay(char player1[], char player2[], int bigturn, int ship_placement[][1
                 else{
                     ship_bomb[bigturn][x_pos][y_pos]--;
                     printf(RED "You didn't hit them!\n" RESET);
+                    play_bloop_sound();
                     usleep(1000000);
                     bigturn = 1 - bigturn;
                 }

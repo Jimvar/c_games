@@ -1,7 +1,12 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include "printingsystem.h"
+#include "soundsystem.h"
 
 int main() {
+    init_audio();
+
     int choice;
     choice = startupscreen();
 
@@ -36,5 +41,6 @@ int main() {
         }
     }
 
+    atexit(cleanup_audio);
     return 0;
 }

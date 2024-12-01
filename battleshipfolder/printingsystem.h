@@ -15,8 +15,8 @@
 #define GREEN "\x1b[1;32m"
 #define BOARD "\033[38;5;102m"
 
-void disable_raw_mode(struct termios *orig_termios);
-void enable_raw_mode(struct termios *orig_termios);
+void disable_raw_mode();
+void enable_raw_mode();
 int startupscreen();
 void getname(char player[], int which, int size);
 void display_board(int ship_placement[][10][10], int bigturn, int x_pos, int y_pos, int size, int looking_side);
