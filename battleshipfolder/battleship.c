@@ -15,23 +15,25 @@ int main() {
         getname(player1, 1, sizeof(player1));
         getname(player2, 2, sizeof(player2));
 
-        ship_setup(player1, player2, bigturn, ship_placement);
+        while(choice==1){
+            ship_setup(player1, player2, bigturn, ship_placement);
 
-        win = gameplay(player1, player2, bigturn, ship_placement);
+            win = gameplay(player1, player2, bigturn, ship_placement);
 
-        if(win==1){
-            printf(SYSTEM "Congrats to %s%s%s for winning!\n", PLAYERS, player1, SYSTEM);
-            wins1++;
+            if(win==1){
+                printf(SYSTEM "Congrats to %s%s%s for winning!\n", PLAYERS, player1, SYSTEM);
+                wins1++;
+            }
+            else{
+                printf(SYSTEM "Congrats to %s%s%s for winning!\n", PLAYERS, player2, SYSTEM);
+                wins2++;
+            }
+
+            printf("The current score is %s%s:%d%s - %s%d:%s%s\n", PLAYERS, player1, wins1, SYSTEM, PLAYERS, wins2, player2, SYSTEM);
+            bigturn = 1 - bigturn;
+            printf("If you want to play again, enter 1: ");
+            scanf("%d", &choice);
         }
-        else{
-            printf(SYSTEM "Congrats to %s%s%s for winning!\n", PLAYERS, player2, SYSTEM);
-            wins2++;
-        }
-
-        printf("The current score is %s%s:%d%s - %s%d:%s%s\n", PLAYERS, player1, wins1, SYSTEM, PLAYERS, wins2, player2, SYSTEM);
-        bigturn = 1 - bigturn;
-        printf("If you want to play again, enter 1: ");
-        scanf("%d", &choice);
     }
 
     return 0;

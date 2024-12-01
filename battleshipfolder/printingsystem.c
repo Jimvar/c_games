@@ -27,7 +27,7 @@ void enable_raw_mode(struct termios *orig_termios) {
 
 int startupscreen() {
     const int max_offset = 15; // Maximum horizontal movement for ships
-    const int frame_delay = 15000; // Frame delay in microseconds (150ms)
+    const int frame_delay = 150000; // Frame delay in microseconds (150ms)
     int direction = 1; // Direction of ship movement (1 = right, -1 = left)
     int offset = 0; // Offset for the first ship
     const int wave_width = 76; // Width matching the battleship logo
@@ -91,7 +91,7 @@ int startupscreen() {
     }
 
     printf(SYSTEM "Welcome to Battleship!\n");
-    printf("Choose gamemode:\n1. VS Player\n2. VS AI\n");
+    printf("Choose gamemode:\n%s1. VS Player\n%s2. VS AI\n%s", GREEN, RED, SYSTEM);
 
     scanf("%c", &choice);
     while(choice!='1'){
@@ -123,15 +123,10 @@ void display_board(int map[][10][10], int bigturn, int x_pos, int y_pos, int siz
             // Check if the ship is at the current position
             for (int s = 0; s < size; s++) {
                 int sx = x_pos, sy = y_pos;
-                if (looking_side == 0) {       // Right
-                    sx += s;
-                } else if (looking_side == 1) { // Up
-                    sy += s;
-                } else if (looking_side == 2) { // Left
-                    sx -= s;
-                } else if (looking_side == 3) { // Down
-                    sy -= s;
-                }
+                if(looking_side == 0) sx += s;
+                else if(looking_side == 1) sy += s;
+                else if(looking_side == 2) sx -= s;
+                else if (looking_side == 3) sy -= s;
                 if (i == sx && j == sy) {
                     ship_to_place = 1;
                     break;
