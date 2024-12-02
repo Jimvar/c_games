@@ -14,12 +14,13 @@
 #define RED   "\x1b[1;31m"
 #define GREEN "\x1b[1;32m"
 #define BOARD "\033[38;5;102m"
+#define ORANGE "\x1b[0;38;5;202m"
 
 void disable_raw_mode();
 void enable_raw_mode();
 int startupscreen();
 void getname(char player[], int which, int size);
-void display_board(int ship_placement[][10][10], int bigturn, int x_pos, int y_pos, int size, int looking_side);
+void display_board(int ship_placement[][10][10], int bigturn, int x_pos, int y_pos, int size, int looking_side, int flash_mode);
 void ship_setup(char player1[], char player2[], int bigturn, int ship_placement[][10][10]);
 int gameplay(char player1[], char player2[], int bigturn, int ship_placement[][10][10]);
 

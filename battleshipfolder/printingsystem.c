@@ -79,7 +79,7 @@ void pos_calc(int *x_pos, int *y_pos, char c){
     }
 }
 
-int startupscreen() {
+int startupscreen(){
     const int max_offset = 15; // Maximum horizontal movement for ships
     const int frame_delay = 150000; // Frame delay in microseconds (150ms)
     int direction = 1; // Direction of ship movement (1 = right, -1 = left)
@@ -174,36 +174,74 @@ void getname(char player[], int which, int size){
     }
 }
 
-void display_board(int map[][10][10], int bigturn, int x_pos, int y_pos, int size, int looking_side){
-    printf(BOARD "    ---------------------\n" RESET);
-    for (int j = 9; j >= 0; j--) {
-        printf(BOARD "%2d |%s", j, RESET);
-        for (int i = 0; i < 10; i++) {
-            int ship_to_place = 0;
+void display_board(int map[][10][10], int bigturn, int x_pos, int y_pos, int size, int looking_side, int flash_mode){
+    if(flash_mode){
+        for(int k = 0; k<5; k++){
+            printf(CLEARSCREEN);
+            printf(BOARD "    ---------------------\n" RESET);
+            for (int j = 9; j >= 0; j--) {
+                printf(BOARD "%2d |%s", j, RESET);
+                for (int i = 0; i < 10; i++) {
+                    int ship_to_place = 0;
 
-            // Check if the ship is at the current position
-            for (int s = 0; s < size; s++) {
-                int sx = x_pos, sy = y_pos;
-                if(looking_side == 0) sx += s;
-                else if(looking_side == 1) sy += s;
-                else if(looking_side == 2) sx -= s;
-                else if (looking_side == 3) sy -= s;
-                if (i == sx && j == sy) {
-                    ship_to_place = 1;
-                    break;
+                    // Check if the ship is at the current position
+                    for (int s = 0; s < size; s++) {
+                        int sx = x_pos, sy = y_pos;
+                        if(looking_side == 0) sx += s;
+                        else if(looking_side == 1) sy += s;
+                        else if(looking_side == 2) sx -= s;
+                        else if (looking_side == 3) sy -= s;
+                        if (i == sx && j == sy) {
+                            ship_to_place = 1;
+                            break;
+                        }
+                    }
+                    
+                    if(map[bigturn][i][j]==1) printf("%s X", (k%2) ? RED : ORANGE);
+                    else if(map[bigturn][i][j] == -1) printf(WHITE " X" RESET);
+                    else if (ship_to_place) printf(GREEN " O" RESET);
+                    else printf(LIGHTBLUE " ~" RESET);
+
                 }
+                printf(BOARD " |\n" RESET);
             }
-            
-            if(map[bigturn][i][j]==1) printf(RED " X" RESET);
-            else if(map[bigturn][i][j] == -1) printf(WHITE " X" RESET);
-            else if (ship_to_place) printf(GREEN " O" RESET);
-            else printf(LIGHTBLUE " ~" RESET);
-
+            printf(BOARD "    ---------------------\n" RESET);
+            printf(BOARD "     0 1 2 3 4 5 6 7 8 9\n" RESET);
+            usleep(100000);
         }
-        printf(BOARD " |\n" RESET);
     }
-    printf(BOARD "    ---------------------\n" RESET);
-    printf(BOARD "     0 1 2 3 4 5 6 7 8 9\n" RESET);
+    else{
+        printf(CLEARSCREEN);
+        printf(BOARD "    ---------------------\n" RESET);
+        for (int j = 9; j >= 0; j--) {
+            printf(BOARD "%2d |%s", j, RESET);
+            for (int i = 0; i < 10; i++) {
+                int ship_to_place = 0;
+
+                // Check if the ship is at the current position
+                for (int s = 0; s < size; s++) {
+                    int sx = x_pos, sy = y_pos;
+                    if(looking_side == 0) sx += s;
+                    else if(looking_side == 1) sy += s;
+                    else if(looking_side == 2) sx -= s;
+                    else if (looking_side == 3) sy -= s;
+                    if (i == sx && j == sy) {
+                        ship_to_place = 1;
+                        break;
+                    }
+                }
+                
+                if(map[bigturn][i][j]==1) printf(RED " X" RESET);
+                else if(map[bigturn][i][j] == -1) printf(WHITE " X" RESET);
+                else if (ship_to_place) printf(GREEN " O" RESET);
+                else printf(LIGHTBLUE " ~" RESET);
+
+            }
+            printf(BOARD " |\n" RESET);
+        }
+        printf(BOARD "    ---------------------\n" RESET);
+        printf(BOARD "     0 1 2 3 4 5 6 7 8 9\n" RESET);
+    }
 }
 
 void ship_setup(char player1[], char player2[], int bigturn, int ship_placement[][10][10]){
@@ -231,7 +269,7 @@ void ship_setup(char player1[], char player2[], int bigturn, int ship_placement[
             while (!done) {
                 // Clear the screen and display the board
                 printf(CLEARSCREEN);
-                display_board(ship_placement, bigturn, x_pos, y_pos, size, looking_side);
+                display_board(ship_placement, bigturn, x_pos, y_pos, size, looking_side, 0);
 
                 // Instructions
                 printf(SYSTEM "Use arrow keys or wasd to move, 'R' to rotate, and Enter to place the ship.\n");
@@ -315,7 +353,7 @@ int gameplay(char player1[], char player2[], int bigturn, int ship_placement[][1
 
         while(oldbigturn == bigturn && ships_hit[bigturn] < 17){
             printf(CLEARSCREEN);
-            display_board(ship_bomb, bigturn, x_pos, y_pos, 1, 0);
+            display_board(ship_bomb, bigturn, x_pos, y_pos, 1, 0, 0);
 
             printf(PLAYERS "%s%s, use arrow keys to move and Enter to bomb the square.\n", (bigturn==0) ? player1 : player2, SYSTEM);
 
@@ -330,7 +368,9 @@ int gameplay(char player1[], char player2[], int bigturn, int ship_placement[][1
                     ship_bomb[bigturn][x_pos][y_pos]++;
                     ships_hit[bigturn]++;
                     printf(GREEN "You hit them!\n" RESET);
+                    display_board(ship_bomb, bigturn, x_pos, y_pos, 1, 0, 1);
                     play_explosion_sound();
+
                     usleep(1000000);
                 }
                 else if(ship_bomb[bigturn][x_pos][y_pos]==-1 || ship_bomb[bigturn][x_pos][y_pos]==1){
@@ -348,7 +388,7 @@ int gameplay(char player1[], char player2[], int bigturn, int ship_placement[][1
         }
 
         if(ships_hit[bigturn]==17){
-            display_board(ship_bomb, bigturn, x_pos, y_pos, 1, 0);
+            display_board(ship_bomb, bigturn, x_pos, y_pos, 1, 0, 0);
             usleep(1000000);
             disable_raw_mode(&orig_termios);
             if(bigturn==0){

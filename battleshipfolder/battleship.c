@@ -12,7 +12,6 @@ int main() {
 
     if(choice==1){
         char player1[50], player2[50];
-        int ship_placement[2][10][10] = {0};
         int bigturn = 0;
         int win, wins1 = 0, wins2 = 0;
 
@@ -21,6 +20,8 @@ int main() {
         getname(player2, 2, sizeof(player2));
 
         while(choice==1){
+            int ship_placement[2][10][10] = {0};
+            
             ship_setup(player1, player2, bigturn, ship_placement);
 
             win = gameplay(player1, player2, bigturn, ship_placement);
