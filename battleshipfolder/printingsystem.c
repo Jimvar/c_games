@@ -26,39 +26,56 @@ void enable_raw_mode(struct termios *orig_termios) {
     tcsetattr(STDIN_FILENO, TCSANOW, &raw);
 }
 
-void pos_calc(int *x_pos, int *y_pos){
-    // Read the next two characters for arrow keys
-    char seq[2];
-    seq[0] = getchar();
-    seq[1] = getchar();
-
+void pos_calc(int *x_pos, int *y_pos, char c){
     int new_x = *x_pos, new_y = *y_pos;
 
-    if(seq[0] == '['){
-        switch (seq[1]){
-            case 'A':
-                // Up arrow
+    if(c == '\033'){
+        char seq[2];
+        seq[0] = getchar(); // Read the next two characters for arrow keys
+        seq[1] = getchar();
+        if(seq[0] == '['){
+            switch (seq[1]){
+                case 'A':
+                    // Up arrow
+                    new_y += 1;
+                    break;
+                case 'B':
+                    // Down arrow
+                    new_y -= 1;
+                    break;
+                case 'C':
+                    // Right arrow
+                    new_x += 1;
+                    break;
+                case 'D':
+                    // Left arrow
+                    new_x -= 1;
+                    break;
+            }
+        }
+    }
+    else{
+        // Handle wasd keys
+        switch (c) {
+            case 'w':
                 new_y += 1;
                 break;
-            case 'B':
-                // Down arrow
+            case 's':
                 new_y -= 1;
                 break;
-            case 'C':
-                // Right arrow
+            case 'd':
                 new_x += 1;
                 break;
-            case 'D':
-                // Left arrow
+            case 'a':
                 new_x -= 1;
                 break;
         }
+    }
 
-        // Check if new position is within bounds
-        if(new_x >= 0 && new_x < 10 && new_y >= 0 && new_y < 10){
-            *x_pos = new_x;
-            *y_pos = new_y;
-        }
+    // Check if new position is within bounds
+    if(new_x >= 0 && new_x < 10 && new_y >= 0 && new_y < 10){
+        *x_pos = new_x;
+        *y_pos = new_y;
     }
 }
 
@@ -196,14 +213,13 @@ void ship_setup(char player1[], char player2[], int bigturn, int ship_placement[
 
     for (int k = 0; k < 2; k++) {
         int size;
-        int x_pos, y_pos, looking_side; // Looking side: 0 right, 1 up, 2 left, 3 down
+        int x_pos = 0, y_pos = 0, looking_side = 0; // Looking side: 0 right, 1 up, 2 left, 3 down
 
         printf(CLEARSCREEN);
         printf(PLAYERS "%s%s, make sure the opponent isn't watching the screen while you are making the placements\n" RESET, (bigturn == 0) ? player1 : player2, SYSTEM);
         usleep(1500000);
 
         for (int l = 5; l > 0; l--){
-            x_pos = 0, y_pos = 0, looking_side = 0;
             int done = 0;
 
             // Determine ship size
@@ -218,7 +234,7 @@ void ship_setup(char player1[], char player2[], int bigturn, int ship_placement[
                 display_board(ship_placement, bigturn, x_pos, y_pos, size, looking_side);
 
                 // Instructions
-                printf(SYSTEM "Use arrow keys to move, 'R' to rotate, and Enter to place the ship.\n");
+                printf(SYSTEM "Use arrow keys or wasd to move, 'R' to rotate, and Enter to place the ship.\n");
 
                 // Read input
                 char c = getchar();
@@ -226,8 +242,8 @@ void ship_setup(char player1[], char player2[], int bigturn, int ship_placement[
                     // Rotate the ship
                     looking_side = (looking_side + 1) % 4;
                 }
-                else if(c == '\033'){ // Escape character
-                    pos_calc(&x_pos, &y_pos);
+                else if(c == '\033' || c == 'w' || c == 'a' || c == 's' || c == 'd'){
+                    pos_calc(&x_pos, &y_pos, c);
                 } 
                 else if(c == '\n'){
                     // Attempt to place the ship
@@ -304,8 +320,8 @@ int gameplay(char player1[], char player2[], int bigturn, int ship_placement[][1
             printf(PLAYERS "%s%s, use arrow keys to move and Enter to bomb the square.\n", (bigturn==0) ? player1 : player2, SYSTEM);
 
             char c = getchar();
-            if(c == '\033'){ // Escape character
-                pos_calc(&x_pos, &y_pos);
+            if(c == '\033' || c == 'w' || c == 'a' || c == 's' || c == 'd'){
+                pos_calc(&x_pos, &y_pos, c);
             }
             else if(c == '\n'){
                 // Attempt to bomb the ship
