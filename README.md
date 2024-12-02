@@ -35,7 +35,7 @@ This repository is a collection of simple console games implemented in C. Each g
 ## How to Play
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/c_games.git
+   git clone https://github.com/Jimvar/c_games
    ```
    
 2. Navigate to the game folder:
