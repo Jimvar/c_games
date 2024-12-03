@@ -1,6 +1,6 @@
 # C Games Collection
 
-A collection of classic console games implemented in C. This repository includes three well-known games: **Blackjack**, **Connect Four**, and **Tic Tac Toe**. Each game is implemented with modular code, showcasing fundamental programming concepts and providing a simple, interactive terminal-based experience.
+A collection of classic console games implemented in C. This repository includes four well-known games: **Blackjack**, **Four in a row**, **Ship Blast** and **Tic Tac Toe**. Each game is implemented with modular code, showcasing fundamental programming concepts and providing a simple, interactive terminal-based experience.
 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -17,10 +17,10 @@ This repository is a collection of simple console games implemented in C. Each g
 1. **Blackjack**:  
    A feature-rich implementation of the classic card game, including multiple decks, dynamic leaderboards, and data persistence. It allows players to choose game modes, track their progress, and interact with the game via a simple terminal interface.
 
-2. **Battleship**:
+2. **Ship Blast**:
    This is a text-based implementation of the classic Battleship game, where players strategically place ships on a grid and attempt to sink the opponent's fleet. The game is played in turns, with each player choosing coordinates to target the enemy's ships. The goal is to be the first to sink all of the opponent's ships. This game is designed for two players, with a simple, clean user interface that is played in the terminal. The code structure is modular, allowing for easy updates or customizations.
 
-3. **Connect Four**:  
+3. **Four in a row**:  
    A two-player strategy game where players aim to connect four discs in a row. The implementation focuses on game mechanics, handling user input, and checking for winning conditions.
 
 4. **Tic Tac Toe**:  
@@ -41,24 +41,24 @@ This repository is a collection of simple console games implemented in C. Each g
 2. Navigate to the game folder:
    ```bash
    cd c_games/blackjackfolder   # For Blackjack game
-   cd c_games/battleshipfolder  # For Battleship game
-   cd c_games/connectfourfolder # For Connect Four game
+   cd c_games/ship_blast_folder  # For Ship Blast game
+   cd c_games/four_in_a_row_folder # For Four in a row game
    cd c_games/tictactoefolder   # For Tic Tac Toe game
    ```
 
 3. Compile the game using a C compiler:
    ```bash
    gcc blackjack.c cardsystem.c printingsystem.c savingsystem.c -o blackjack
-   gcc battleship.c printingsystem.c soundsystem.c -Wall -I/usr/include/SDL2 -lSDL2 -lSDL2_mixer -o battleship
-   gcc connectfour.c -o connectfour
+   gcc ship_blast.c printingsystem.c soundsystem.c -Wall -I/usr/include/SDL2 -lSDL2 -lSDL2_mixer -o ship_blast
+   gcc four_in_a_row.c -o four_in_a_row
    gcc tictactoe.c -o tictactoe
    ```
 
 4. Run the compiled executable:
    ```bash
    ./blackjack   # For Blackjack game
-   ./battleship  # For Battleship game
-   ./connectfour # For Connect Four game
+   ./ship_blast  # For Ship Blast game
+   ./four_in_a_row # For Four in a row game
    ./tictactoe   # For Tic Tac Toe game
    ```
 
@@ -82,15 +82,13 @@ The repository is organized into separate folders for each game, with the follow
   - `printingsystem.c`/`printingsystem.h`: Game interface and output.
   - `savingsystem.c`/`savingsystem.h`: Saving and loading game state.
 
-- **Battleship**:
-  - `battleship.c`: Main game logic for Battleship.
+- **Ship Blast**:
+  - `ship_blast.c`: Main game logic for Ship Blast.
   - `printingsystem.c`: Game interface and output.
   - `soundsystem.c`: Handles sound init, sound play and sound cleanup.
 
-- **Connect Four**:
-  - `connectfour.c`: Main game logic for Connect Four.
+- **Four in a row**:
+  - `four_in_a_row.c`: Main game logic for Four in a row.
 
 - **Tic Tac Toe**:
   - `tictactoe.c`: Main game logic for Tic Tac Toe.
-
----
