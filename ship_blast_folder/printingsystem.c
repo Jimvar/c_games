@@ -92,12 +92,12 @@ int startupscreen(){
     while (counter++ <= 60) {
         printf(CLEARSCREEN); // Clear the screen
 
-        printf(DARKBLUE  "███████╗██╗  ██╗██╗██████╗     ██████╗ ██╗      █████╗ ███████╗████████╗\n");
-        printf(          "██╔════╝██║  ██║██║██╔══██╗    ██╔══██╗██║     ██╔══██╗██╔════╝╚══██╔══╝\n");
-        printf(LIGHTBLUE "███████╗███████║██║██████╔╝    ██████╔╝██║     ███████║███████╗   ██║   \n");
-        printf(          "╚════██║██╔══██║██║██╔═══╝     ██╔══██╗██║     ██╔══██║╚════██║   ██║   \n");
-        printf(RESET     "███████║██║  ██║██║██║         ██████╔╝███████╗██║  ██║███████║   ██║   \n");
-        printf(          "╚══════╝╚═╝  ╚═╝╚═╝╚═╝         ╚═════╝ ╚══════╝╚═╝  ╚═╝╚══════╝   ╚═╝   \n");
+        printf(DARKBLUE  "███████╗██╗  ██╗██╗██████╗     ██████╗ ██╗      █████╗ ███████╗████████╗██║\n");
+        printf(          "██╔════╝██║  ██║██║██╔══██╗    ██╔══██╗██║     ██╔══██╗██╔════╝╚══██╔══╝██║\n");
+        printf(LIGHTBLUE "███████╗███████║██║██████╔╝    ██████╔╝██║     ███████║███████╗   ██║   ██║\n");
+        printf(          "╚════██║██╔══██║██║██╔═══╝     ██╔══██╗██║     ██╔══██║╚════██║   ██║   ╚═╝\n");
+        printf(RESET     "███████║██║  ██║██║██║         ██████╔╝███████╗██║  ██║███████║   ██║   ██║\n");
+        printf(          "╚══════╝╚═╝  ╚═╝╚═╝╚═╝         ╚═════╝ ╚══════╝╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝\n");
 
         // Ship and wave rendering
         for (int i = 0; i < offset; i++) printf(" ");
@@ -272,7 +272,7 @@ void ship_setup(char player1[], char player2[], int bigturn, int ship_placement[
                 display_board(ship_placement, bigturn, x_pos, y_pos, size, looking_side, 0);
 
                 // Instructions
-                printf(SYSTEM "Use arrow keys or wasd to move, 'R' to rotate, and Enter to place the ship.\n");
+                printf(SYSTEM "Use arrow keys or wasd to move, 'R' to rotate, and Enter or q to place the ship.\n");
 
                 // Read input
                 char c = getchar();
@@ -283,7 +283,7 @@ void ship_setup(char player1[], char player2[], int bigturn, int ship_placement[
                 else if(c == '\033' || c == 'w' || c == 'a' || c == 's' || c == 'd'){
                     pos_calc(&x_pos, &y_pos, c);
                 } 
-                else if(c == '\n'){
+                else if(c == '\n' || c == 'q'){
                     // Attempt to place the ship
                     int valid = 1;
                     for (int s = 0; s < size; s++) {
@@ -355,13 +355,13 @@ int gameplay(char player1[], char player2[], int bigturn, int ship_placement[][1
             printf(CLEARSCREEN);
             display_board(ship_bomb, bigturn, x_pos, y_pos, 1, 0, 0);
 
-            printf(PLAYERS "%s%s, use arrow keys to move and Enter to bomb the square.\n", (bigturn==0) ? player1 : player2, SYSTEM);
+            printf(PLAYERS "%s%s, use arrow keys or wasd to move and Enter or q to bomb the square.\n", (bigturn==0) ? player1 : player2, SYSTEM);
 
             char c = getchar();
             if(c == '\033' || c == 'w' || c == 'a' || c == 's' || c == 'd'){
                 pos_calc(&x_pos, &y_pos, c);
             }
-            else if(c == '\n'){
+            else if(c == '\n' || c == 'q'){
                 // Attempt to bomb the ship
                 if(ship_placement[1 - bigturn][x_pos][y_pos]==1){
                     ship_placement[1 - bigturn][x_pos][y_pos]++;
